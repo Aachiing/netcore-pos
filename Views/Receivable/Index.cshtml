@@ -1,0 +1,350 @@
+﻿@using Sales_Inventory.Models.DTO;
+@model IEnumerable<OrderHeaderDTO>;
+@{
+    ViewData["Title"] = "Accounts Receivables";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card text-dark bg-light mb-3">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Customer Name</th>
+                                <th>Order No</th>
+                                <th>Total Items</th>
+                                <th>Amount Due</th>
+                                <th>Amount Paid</th>
+                                <th>Balance</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Count() > 0)
+                            {
+                                foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@item.customer_name</td>
+                                        <td>@item.order_no</td>
+                                        <td>@item.total_items</td>
+                                        <td>@item.gross</td>
+                                        <td>@item.amount_paid</td>
+                                        <td>@item.balance</td>
+                                        <td style="width:428px">
+                                            <div class="col-md-12">
+                                                <div class="row">
+                                                    <div class="col-sm-4 pb-2">
+                                                        <button type="button" class="btn btn-success btn-sm col-12" onclick="LoadPaymentHistory(@item.order_id)">
+                                                            Payment History
+                                                        </button>
+                                                    </div>
+                                                    <div class="col-sm-4 pb-2">
+                                                        <button type="button" class="btn btn-danger btn-sm col-12" onclick="LoadOrderDetails(@item.order_id)">
+                                                            Items Ordered
+                                                        </button>
+                                                    </div>
+                                                    <div class="col-sm-4 pb-2">
+                                                        <button type="button" class="btn btn-secondary btn-sm col-12" onclick="AddPayment(@item.order_id)">
+                                                            Add Payment
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="mdlPaymentHistory" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Payment History</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped" id="tblPaymentHistory">
+                            <thead>
+                                <tr>
+                                    <th>Customer Name</th>
+                                    <th>Order No</th>
+                                    <th>Amount Paid</th>
+                                    <th>Date Paid</th>
+                                    <th>Payment Type</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="mdlOrderDetails" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Order Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped" id="tblOrderDetails">
+                            <thead>
+                                <tr>
+                                    <th>Item Name</th>
+                                    <th>Barcode</th>
+                                    <th>Unit Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="mdlPaymentDetails" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Payment Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form>
+                <div class="modal-body">
+                    <input type="hidden" class="form-control" id="txtPaymentType" value="CASH" />
+                    <input type="hidden" class="form-control" id="txtCreditId" />
+                    <div class="row pb-3" id="divCreditPaymentType">
+                        <div class="col-md-12 mb-2">
+                            Payment Type
+                            <select class="form-select" id="ddlPaymentType">
+                                <option value="CASH">CASH</option>
+                                <option value="CARD">CARD</option>
+                                <option value="CHECK">CHECK</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row pb-3 d-none" id="divCardPayment">
+                        <div class="col-md-6 mb-2">
+                            Card No
+                            <input type="text" class="form-control" id="txtCardNo" autocomplete="off" />
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            Reference No
+                            <input type="text" class="form-control" id="txtReferenceNo" autocomplete="off" />
+                        </div>
+                    </div>
+
+                    <div class="row pb-3 d-none" id="divCheckPayment">
+                        <div class="col-md-6 mb-2">
+                            Check No
+                            <input type="text" class="form-control" id="txtCheckNo" autocomplete="off" />
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            Check Amount
+                            <input type="number" class="form-control" id="txtCheckAmt" autocomplete="off" />
+                        </div>
+                        <div class="col-md-12 mb-2">
+                            Check Date
+                            <input type="date" class="form-control" id="dtCheckDate" autocomplete="off" />
+                        </div>
+                    </div>
+
+                    <div class="row pb-3" id="divCashTendered">
+                        <div class="col-md-12 mb-2">
+                            Amount Paid
+                            <input type="number" class="form-control numbers" id="txtAmountPaid" autocomplete="off" />
+                        </div>
+                    </div>
+                    <div class="row pb-3">
+                        <div class="col-md-12 mb-2">
+                            <input type="button" class="btn btn-secondary col-12" value="Pay Now" />
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+            ActiveMenu("liPayments")
+        });
+
+        function LoadPaymentHistory(creditId) {
+            $("#tblPaymentHistory > tbody").load("payment-history/" + creditId);
+            $("#mdlPaymentHistory").modal("show");
+        }
+
+        function LoadOrderDetails(creditId) {
+            $("#tblOrderDetails > tbody").load("order-details/" + creditId);
+            $("#mdlOrderDetails").modal("show");
+        }
+        function AddPayment(creditId, customer) {
+            $("#txtCreditId").val(creditId);
+            $("#mdlPaymentDetails").modal("show");
+        }
+
+        $("#ddlPaymentType").on('change', function () {
+            var paymentType = $(this).val();
+
+            $("#txtPaymentType").val(paymentType)
+
+            if (paymentType == "CASH") {
+                $("#divCheckPayment,#divCardPayment").addClass("d-none");
+            }
+            else if (paymentType == "CARD") {
+                $("#divCardPayment").removeClass("d-none");
+                $("#divCheckPayment").addClass("d-none");
+            }
+            else if (paymentType == "CHECK") {
+
+                $("#divCheckPayment").removeClass("d-none");
+                $("#divCardPayment").addClass("d-none");
+            }
+        });
+        $("#mdlPaymentDetails").enterKey(function () {
+            $("#mdlPaymentDetails .btn-secondary").trigger("click")
+        })
+        $("#mdlPaymentDetails .btn-secondary").on('click', function () {
+            PostPayment();
+        });
+
+        function GetPaymentDetails() {
+
+            var obj = {
+                credit_header_id: $("#txtCreditId").val(),
+                payment_type: $("#txtPaymentType").val(),
+                card_no: $("#txtCardNo").val(),
+                reference_no: $("#txtReferenceNo").val(),
+                check_no: $("#txtCheckNo").val(),
+                check_amount: $("#txtCheckAmt").val(),
+                check_date: $("#dtCheckDate").val(),
+                amount_paid: $("#txtAmountPaid").val(),
+                transaction_type: $("#txtTransactionType").val(),
+            }
+
+            return obj;
+        }
+
+        function ValidatePaymentDetails(payment_type) {
+            var invalid_input = 0;
+
+            if (payment_type == "CARD") {
+
+                if ($("#txtCustomerName").val() == '') {
+                    $("#txtCustomerName").css("border", "1px solid red");
+                    invalid_input++;
+                }
+
+                if ($("#txtCardNo").val() == '') {
+                    $("#txtCardNo").css("border", "1px solid red");
+                    invalid_input++;
+                }
+
+                if ($("#txtReferenceNo").val() == '') {
+                    $("#txtReferenceNo").css("border", "1px solid red");
+                    invalid_input++;
+                }
+
+                if ($("#txtAmountPaid").val() == '') {
+                    $("#txtAmountPaid").css("border", "1px solid red");
+                    invalid_input++;
+                }
+
+                return invalid_input;
+            }
+            else if (payment_type == "CHECK") {
+
+                if ($("#txtCustomerName").val() == '') {
+                    $("#txtCustomerName").css("border", "1px solid red");
+                    invalid_input++;
+                }
+
+                if ($("#txtCheckNo").val() == '') {
+                    $("#txtCheckNo").css("border", "1px solid red");
+                    invalid_input++;
+                }
+
+                if ($("#txtCheckAmt").val() == '') {
+                    $("#txtCheckAmt").css("border", "1px solid red");
+                    invalid_input++;
+                }
+
+                if ($("#dtCheckDate").val() == '') {
+                    $("#dtCheckDate").css("border", "1px solid red");
+                    invalid_input++;
+                }
+
+                if ($("#txtAmountPaid").val() == '') {
+                    $("#txtAmountPaid").css("border", "1px solid red");
+                    invalid_input++;
+                }
+
+                return invalid_input;
+            }
+            else if (payment_type == "CASH") {
+
+                if ($("#txtCustomerName").val() == '') {
+                    $("#txtCustomerName").css("border", "1px solid red");
+                    invalid_input++;
+                }
+
+                if ($("#txtAmountPaid").val() == '') {
+                    $("#txtAmountPaid").css("border", "1px solid red");
+                    invalid_input++;
+                }
+                return invalid_input;
+            }
+            return invalid_input;
+        }
+        function PostPayment() {
+            var count = ValidatePaymentDetails($("#txtPaymentType").val());
+
+            if (count == 0) {
+                $.ajax({
+                    url: "pay",
+                    type: "POST",
+                    data: { dto: GetPaymentDetails() },
+                    success: function (response) {
+                        alert(response.msg);
+                        window.location.reload();
+                    },
+                    failure: function (response) {
+                        alert(response);
+                    }
+
+                });
+            }
+            else {
+                alert("Please complete payment details")
+            }
+        }
+    </script>
+}

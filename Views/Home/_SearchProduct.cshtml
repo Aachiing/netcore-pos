@@ -1,0 +1,24 @@
+﻿@using Sales_Inventory.Models.DTO;
+@model ProductDTO;
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@if (Model.list.Count() > 0)
+{
+    foreach (var item in Model.list)
+    {
+        <tr>
+            <td class="d-none">@item.product_id</td>
+            <td>@item.product_name</td>
+            <td>@item.product_code</td>
+            <td>@item.barcode</td>
+            <td>@item.quantity</td>
+            <td>@item.unit</td>
+            <td>@item.price</td>
+            <td>
+                <input type="button" class="btn btn-success  btn-sm col-12" value="Select" onclick="GetItemDetails(@item.product_id)">
+            </td>
+        </tr>
+    }
+}

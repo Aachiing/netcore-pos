@@ -1,0 +1,140 @@
+html {
+    /*font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;*/
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+    background-color: #f0f2f5;
+    font-family: "Roboto",Helvetica,Arial,sans-serif
+}
+
+.nav-custom-bg {
+    background-color: #585858 !important;
+}
+
+.table-custom-bg {
+    background-color: #7c7b7b !important;
+    color: white;
+}
+
+.btn-primary {
+    background-color: white !important;
+    border: 1px solid #548779 !important;
+    color: #548779;
+    font-family: Arial, Helvetica, sans-serif !important;
+    font-weight: bold !important;
+    font-size: 15px !important;
+}
+
+    .btn-primary:hover {
+        color: #548779;
+    }
+
+    .btn-check:focus + .btn-primary, .btn-primary:focus {
+        color: #548779;
+        background-color: #0b5ed7;
+        border-color: #0a58ca;
+        box-shadow: 0 0 0 0.25rem rgba(49, 132, 253, 0.5);
+    }
+
+.main-content {
+    padding: 15px;
+}
+
+table tr.active {
+    background-color: #9cd5f7;
+}
+
+h4 {
+    font-family: Calibri !important;
+    font-weight: bold !important;
+}
+
+th {
+    font-family: Arial, Helvetica, sans-serif !important;
+    font-size: 13px !important;
+    text-align: center;
+}
+
+.jumbotron-fluid {
+    background-color: #f3f3f3;
+    border-radius: 5px;
+}
+
+.btn-warning {
+    color: white;
+    background-image: linear-gradient(195deg, #EC407A 0%, #D81B60 100%);
+    border-color: #D81B60;
+}
+
+    .btn-warning:hover {
+        color: white;
+        background-image: linear-gradient(195deg, #EC407A 0%, #D81B60 100%);
+        border-color: #D81B60;
+    }
+
+    .btn-check:focus + .btn-warning, .btn-warning:focus {
+        color: white;
+        background-image: linear-gradient(195deg, #EC407A 0%, #D81B60 100%);
+        border-color: #D81B60;
+        box-shadow: 0 0 0 0.25rem #EC407A;
+    }
+
+    .btn-check:checked + .btn-warning, .btn-check:active + .btn-warning, .btn-warning:active, .btn-warning.active, .show > .btn-warning.dropdown-toggle {
+        color: white;
+        background-image: linear-gradient(195deg, #EC407A 0%, #D81B60 100%);
+        border-color: #D81B60;
+    }
+
+        .btn-check:checked + .btn-warning:focus, .btn-check:active + .btn-warning:focus, .btn-warning:active:focus, .btn-warning.active:focus, .show > .btn-warning.dropdown-toggle:focus {
+            box-shadow: 0 0 0 0.25rem #EC407A;
+        }
+
+.li-product {
+    line-height: 80%;
+}
+
+.li-product-description {
+    margin-bottom: 5px;
+    font-family: Arial;
+    font-weight: bold;
+}
+
+.li-product-details {
+    font-size: 12px;
+}
+
+.loader {
+    position: absolute;
+    top: 70%;
+    left: 47%;
+    margin-left: 0px;
+    margin-top: -200px;
+    text-align: center;
+    z-index: 9999;
+    overflow: inherit;
+    width: 100px;
+    height: 102px;
+}
+
+.loaderOverlay {
+    position: absolute;
+    left: 0px;
+    top: 30%;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    z-index: 9999;
+}

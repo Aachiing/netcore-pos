@@ -1,0 +1,228 @@
+﻿@using Sales_Inventory.Models.DTO;
+@model PaginationDTO<ProductDTO>;
+
+@{
+    ViewData["Title"] = "Inventory";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card text-dark bg-light mb-3">
+            <div class="card-body">
+                <div class="row pb-2">
+                    <div class="col-md-2">
+                        <a type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#mdlAddProduct"><i class="fa-solid fa-plus"></i>  Add Product</a>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Item Name</th>
+                                <th>Item Code</th>
+                                <th>Barcode</th>
+                                <th>Brand</th>
+                                <th>Unit</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.item_list.Count() > 0)
+                            {
+                                foreach (var item in Model.item_list)
+                                {
+                                    <tr>
+                                        <td>@item.product_name</td>
+                                        <td>@item.product_code</td>
+                                        <td>@item.barcode</td>
+                                        <td>@item.brand</td>
+                                        <td>@item.unit</td>
+                                        <td>@item.quantity</td>
+                                        <td>@item.price</td>
+
+                                        <td>
+                                            <div class="col-lg-11">
+                                                <div class="row">
+                                                    <div class="col-lg-6 pb-2">
+                                                        <button type="button" class="btn btn-success btn-sm col-10" onclick="GetById(@item.product_id)">
+                                                            <i class="fa-solid fa-pen-to-square"></i>   Edit
+                                                        </button>
+                                                    </div>
+                                                    <div class="col-lg-6 pb-2">
+                                                        <button type="button" class="btn btn-danger btn-sm col-10" onclick="GetById(@item.product_id)">
+                                                            <i class="fa-solid fa-trash-can"></i>   Delete
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <nav>
+                    <ul class="pagination justify-content-end">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        @for (int i = 1; i <= Model.page_count + 1; i++)
+                        {
+                            <li class="page-item @(i == ViewBag.Page ? "active" :"")"><a class="page-link" asp-controller="inventory" asp-action="list" asp-route-page="@i">@i</a></li>
+                        }
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="mdlAddProduct" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" id="product_id">
+                <div class="mb-2">
+                    Product Name
+                    <input type="text" class="form-control" id="product_name">
+
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        Product Code
+                        <input type="text" class="form-control" id="product_code">
+
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        Barcode
+                        <input type="text" class="form-control" id="barcode">
+
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        Brand
+                        <input type="text" class="form-control" id="brand">
+
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        Quantity
+                        <input type="number" class="form-control" id="quantity">
+
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        Unit
+                        <input type="text" class="form-control" id="unit">
+
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        Price
+                        <input type="number" class="form-control" id="price">
+
+                    </div>
+                    <div class="col-md-12">
+                        <input type="button" class="btn btn-success col-12" value="Save" id="btn-save">
+                    </div>
+                </div>
+                @*   <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="chkIsDiscounted">
+                <label class="form-check-label" for="chkIsDiscounted">
+                Discounted?
+                </label>
+                </div>
+                <div class="mb-2">
+                <input type="number" asp-for="discount_rate" class="form-control" id="discount_rate" disabled>
+                <span asp-validation-for="discount_rate" class="text-danger"></span>
+                </div> *@
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="mdlUpdateProduct" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Update Product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="frmUpdateProduct">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" id="product_id">
+                <div class="mb-2">
+                    Product Name
+                    <input type="text" class="form-control" id="product_name">
+
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        Product Code
+                        <input type="text" class="form-control" id="product_code">
+
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        Barcode
+                        <input type="text" class="form-control" id="barcode">
+
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        Brand
+                        <input type="text" class="form-control" id="brand">
+
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        Quantity
+                        <input type="number" class="form-control" id="quantity">
+
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        Unit
+                        <input type="text" class="form-control" id="unit">
+
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        Price
+                        <input type="number" class="form-control" id="price">
+
+                    </div>
+                    <div class="col-md-12">
+                        <input type="button" class="btn btn-success col-12" value="Save" id="btn-update">
+                    </div>
+                </div>
+                @*   <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="chkIsDiscounted">
+                <label class="form-check-label" for="chkIsDiscounted">
+                Discounted?
+                </label>
+                </div>
+                <div class="mb-2">
+                <input type="number" asp-for="discount_rate" class="form-control" id="discount_rate" disabled>
+                <span asp-validation-for="discount_rate" class="text-danger"></span>
+                </div> *@
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script src="~/js/inventoryjs.js"></script>
+}

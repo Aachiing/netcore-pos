@@ -1,0 +1,206 @@
+﻿sidebar {
+    width: 15.625rem;
+    height: 98%;
+    background-image: linear-gradient(195deg,#42424a,#191919);
+    position: absolute;
+    border-radius: 12px;
+    transition: all 0.4s ease;
+    margin: 10px 10px;
+    /* height: calc(100vh - 95px);*/
+}
+
+.sidenav-header {
+    height: 4.875rem;
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    padding-top: 30px;
+}
+
+.sidenav-menu ul li.nav-item {
+    font-size: 15px;
+    margin: 0 1rem;
+}
+
+    .sidenav-menu ul li.nav-item .nav-link {
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+        margin: 0 1rem;
+        margin-bottom: 1.5px;
+    }
+
+    .sidenav-menu ul li.nav-item:hover {
+        background-color: #606060;
+        border-radius: 5px;
+    }
+
+    .sidenav-menu ul li.nav-item.active {
+        background-image: linear-gradient(195deg, #EC407A 0%, #D81B60 100%);
+        border-radius: 5px;
+    }
+
+    .sidenav-menu ul li.nav-item i {
+        height: 120px;
+        height: 30px;
+    }
+
+hr {
+    margin: 1rem 0;
+    color: inherit;
+    border: 0;
+    border-top: 1px solid;
+    opacity: .25
+}
+
+hr {
+    border-top: none;
+    height: 1px
+}
+
+    hr.vertical {
+        position: absolute;
+        background-color: transparent;
+        height: 100%;
+        right: 0;
+        top: 0;
+        width: 1px
+    }
+
+        hr.vertical.light {
+            background-image: linear-gradient(90deg,hsla(0,0%,100%,0),#fff,hsla(0,0%,100%,0))
+        }
+
+        hr.vertical.dark {
+            background-image: linear-gradient(90deg,transparent,rgba(0,0,0,.4),transparent)
+        }
+
+        hr.vertical.gray-light {
+            background-image: linear-gradient(90deg,transparent,rgba(0,0,0,.1),transparent)
+        }
+
+    hr.horizontal {
+        background-color: transparent
+    }
+
+        hr.horizontal.light {
+            background-image: linear-gradient(90deg,hsla(0,0%,100%,0),#fff,hsla(0,0%,100%,0))
+        }
+
+        hr.horizontal.dark {
+            background-image: linear-gradient(90deg,transparent,rgba(0,0,0,.4),transparent)
+        }
+
+        hr.horizontal.gray-light {
+            background-image: linear-gradient(90deg,transparent,rgba(0,0,0,.1),transparent)
+        }
+
+
+#sidebar.sibebar-collapse {
+    width: 0px;
+}
+
+sidebar-items.sibebar-collapse {
+    display: none;
+}
+
+#main-content.sibebar-collapse {
+    width: calc(100% - 0px);
+}
+
+#main-content-body.sibebar-collapse {
+    width: calc(100% - 0px);
+}
+
+main-content {
+    transition: all 0.4s ease;
+    float: right;
+    width: 100%;
+    padding: 10px;
+}
+
+#main-content-body {
+    margin: 10px 10px;
+    transition: all 0.4s ease;
+    float: right;
+    width: calc(100% - 290px);
+    padding: 5px;
+}
+
+#content-title {
+    font-weight: 700;
+    color: #344767;
+}
+
+#header-nav {
+    background-color: #fff;
+    min-height: 70px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 18px 50px -10px;
+    border-radius: 12px;
+}
+
+    #header-nav span.header-title {
+        font-family: 'Anton', serif;
+        color: #563d7c;
+        font-size: 33px;
+        transition: all 0.4s ease;
+    }
+
+#sidebar-toggler {
+    color: #563d7c;
+    background-color: #fff;
+    border-radius: 30%;
+    border: 2px solid #563d7c;
+    display: inline-block;
+}
+
+.navbar {
+    justify-content: normal !important;
+}
+
+.sidebar-modules ul {
+    list-style: none;
+    font-size: 15px;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+}
+
+.card {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border-radius: 12px;
+}
+
+@media (max-width: 768px) {
+    sidebar {
+        width: 0px;
+        margin-top: 88px;
+        margin-left: 10px;
+    }
+
+    #main-content-body {
+        width: calc(100% - 0px);
+    }
+
+    #header-nav span.header-title {
+        font-size: 15px;
+    }
+
+    sidebar-items {
+        display: none;
+    }
+
+    #sidebar.sibebar-collapse {
+        width: 275px;
+        margin-top: 88px;
+        margin-left: 10px;
+    }
+
+    #main-content-body.sibebar-collapse {
+        width: calc(100% - 290px);
+    }
+
+    sidebar-items.sibebar-collapse {
+        display: inline-block;
+    }
+}

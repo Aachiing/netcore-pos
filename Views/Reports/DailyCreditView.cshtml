@@ -1,0 +1,39 @@
+﻿@{
+    ViewData["Title"] = "Daily Credit Sales Report";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row pb-2">
+                    <div class="col-md-12">
+                        <iframe name="myIframe" id="myIframe" width="100%" height="750px" src="" style="border: 1px solid black"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+            ActiveMenu("liDailyCreditReports");
+
+            $.ajax({
+                url: "daily-credit",
+                type: "POST",
+                success: function (response) {
+                    $("#myIframe").attr("src", response.response)
+                },
+                failure: function (response) {
+                    alert(response);
+                }
+
+            });
+        });
+    </script>
+}

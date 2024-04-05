@@ -50,3 +50,9 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+/.config
+/Properties
+/packages/EntityFramework.6.2.0
+/obj
+/bin/Debug/net6.0
+/.vs
