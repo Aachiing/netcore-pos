@@ -55,3 +55,6 @@ dkms.conf
 /obj
 /bin/Debug/net6.0
 /.vs
+/bin/Release/net6.0
+/Properties/PublishProfiles
+/Sales&Inventory.csproj.user
