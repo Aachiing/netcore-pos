@@ -20,12 +20,12 @@
 
         <div class="sidenav-menu">
             <ul class="navbar-nav">
-                @*  <li class="nav-item" id="liDashboard">
-                <a class="nav-link text-white" href="#">
-                <i class="fa-solid fa-chart-pie" style="height:20px;width:30px"></i>
-                <span class="nav-link-text">&nbsp;Dashboard</span>
-                </a>
-                </li> *@
+                <li class="nav-item" id="liDashboard">
+                    <a class="nav-link text-white" href="#">
+                        <i class="fa-solid fa-chart-pie" style="height:20px;width:30px"></i>
+                        <span class="nav-link-text">&nbsp;Dashboard</span>
+                    </a>
+                </li>
                 <li class="nav-item active" id="liOrders">
                     <a class="nav-link text-white" href="../orders/list">
                         <i class="fa-solid fa-cart-plus" style="height:20px;width:30px"></i>
@@ -36,6 +36,18 @@
                     <a class="nav-link text-white" href="../acct-receivables/list">
                         <i class="fa-solid fa-money-bill-wave" style="height:20px;width:30px"></i>
                         <span class="nav-link-text">&nbsp;Receivables</span>
+                    </a>
+                </li>
+                <li class="nav-item" id="liPayments">
+                    <a class="nav-link text-white" href="../acct-receivables/list">
+                        <i class="fa-solid fa-credit-card" style="height:20px;width:30px"></i>
+                        <span class="nav-link-text">&nbsp;Expenses</span>
+                    </a>
+                </li>
+                <li class="nav-item" id="liInventory">
+                    <a class="nav-link text-white" href="../inventory/list">
+                        <i class="fa-solid fa-users" style="height:20px;width:30px"></i>
+                        <span class="nav-link-text">&nbsp;Customers</span>
                     </a>
                 </li>
                 <li class="nav-item" id="liInventory">
@@ -62,7 +74,12 @@
                         </li>
                     </ul>
                 </li>
-
+                <li class="nav-item" id="liDashboard">
+                    <a class="nav-link text-white" href="../users/login">
+                        <i class="fa-solid fa-screwdriver-wrench" style="height:20px;width:30px"></i>
+                        <span class="nav-link-text">&nbsp;System Management</span>
+                    </a>
+                </li>
                 <li class="nav-item" id="liDashboard">
                     <a class="nav-link text-white" href="../users/login">
                         <i class="fa-solid fa-right-from-bracket" style="height:20px;width:30px"></i>
@@ -95,7 +112,7 @@
     <script src="~/lib/font-awesome/js/all.min.js"></script>
     <script src="~/lib/jquery/dist/jquery-ui-1.13.2.js"></script>
 
-    
+
     <script>
         $(document).ready(function () {
             $("#sidebar-toggler").click(function () {
