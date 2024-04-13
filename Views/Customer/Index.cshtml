@@ -1,0 +1,183 @@
+﻿@{
+    ViewData["Title"] = "Customer List";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card text-dark bg-light mb-3">
+            <div class="card-body">
+                <div class="row pb-2">
+                @*     <div class="col-md-12 pb-5">
+                        <h2 id="content-title" class="float-start">@ViewData["Title"]</h2>
+                    </div> *@
+                    <div class="col-md-10 pb-2">
+                        <a type="button" class="btn btn-secondary float-start" data-bs-toggle="modal" data-bs-target="#mdlAddCustomer"><i class="fa-solid fa-plus"></i>  Add Customer</a>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="text" class="form-control float-end" id="txt-search" placeholder="Search" />
+                    </div>
+                </div>
+                <div class="table-responsive" id="tblCustomerList">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="mdlAddCustomer" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Customer</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="mb-2">
+                    Customer Name
+                    <input type="text" class="form-control" id="customer_name">
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-6 mb-2">
+                        Address
+                        <input type="text" class="form-control" id="address">
+
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        Contact No
+                        <input type="number" class="form-control" id="contact_no">
+
+                    </div>
+                    <div class="col-md-12">
+                        <input type="button" class="btn btn-success col-12" value="Save" id="btn-save">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="mdlUpdateCustomer" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Update Customer</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="frmUpdateCustomer">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" id="id">
+                <div class="mb-2">
+                    Customer Name
+                    <input type="text" class="form-control" id="customer_name">
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        Address
+                        <input type="text" class="form-control" id="address">
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        Contact No
+                        <input type="number" class="form-control" id="contact_no">
+                    </div>
+                    <div class="col-md-12">
+                        <input type="button" class="btn btn-success col-12" value="Save" id="btn-update">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(function () {
+            ActiveMenu("liCustomers");
+            $("#tblCustomerList").load("customer-list");
+        });
+
+        $("#btn-save").on("click", function () {
+
+            var obj = {
+                customer_name: $("#customer_name").val(),
+                address: $("#address").val(),
+                contact_no: $("#contact_no").val(),
+            }
+
+            $.ajax({
+                url: "create",
+                type: "POST",
+                data: { dto: obj },
+                success: function (response) {
+                    alert(response);
+                    window.location.reload();
+                },
+                failure: function (response) {
+                    alert(response);
+                }
+
+            });
+        })
+
+        $("#btn-update").click(function () {
+
+            var obj = {
+                id: $("#frmUpdateCustomer #id").val(),
+                customer_name: $("#frmUpdateCustomer #customer_name").val(),
+                address: $("#frmUpdateCustomer #address").val(),
+                contact_no: $("#frmUpdateCustomer #contact_no").val(),
+            }
+
+            $.ajax({
+                url: "update",
+                type: "PUT",
+                data: { dto: obj },
+                success: function (response) {
+                    alert(response);
+                    window.location.reload();
+                },
+                failure: function (response) {
+                    alert(response);
+                }
+
+            });
+        });
+
+        function GetById(id) {
+            $.ajax({
+                url: "get-by-id/" + id,
+                type: "GET",
+                success: function (response) {
+                    ClearFields("frmUpdateCustomer", response);
+                    $("#mdlUpdateCustomer").modal("show");
+                },
+                failure: function (response) {
+                    alert(response);
+                }
+            });
+        }
+
+        function Delete(id) {
+            if (confirm("Are you sure to remove customer?")) {
+                $.ajax({
+                    url: "delete",
+                    type: "DELETE",
+                    data: { id: id },
+                    success: function (response) {
+                        alert(response);
+                        window.location.reload();
+                    },
+                    failure: function (response) {
+                        alert(response);
+                    }
+
+                });
+            }
+
+        }
+    </script>
+}

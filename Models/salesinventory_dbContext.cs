@@ -18,20 +18,22 @@ namespace Sales_Inventory.Models
 
         public virtual DbSet<TblCreditDetail> TblCreditDetails { get; set; } = null!;
         public virtual DbSet<TblCreditHeader> TblCreditHeaders { get; set; } = null!;
+        public virtual DbSet<TblCustomer> TblCustomers { get; set; } = null!;
+        public virtual DbSet<TblExpense> TblExpenses { get; set; } = null!;
         public virtual DbSet<TblOrderDetail> TblOrderDetails { get; set; } = null!;
         public virtual DbSet<TblOrderHeader> TblOrderHeaders { get; set; } = null!;
         public virtual DbSet<TblProduct> TblProducts { get; set; } = null!;
         public virtual DbSet<TblReceivable> TblReceivables { get; set; } = null!;
         public virtual DbSet<TblUser> TblUsers { get; set; } = null!;
 
-//        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//        {
-//            if (!optionsBuilder.IsConfigured)
-//            {
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-//                optionsBuilder.UseSqlServer("Server=(localdb)\\local; Database=sales&inventory_db; Trusted_Connection=True;");
-//            }
-//        }
+        //        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //        {
+        //            if (!optionsBuilder.IsConfigured)
+        //            {
+        //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        //                optionsBuilder.UseSqlServer("Server=(localdb)\\localdb; Database=sales&inventory_db; Trusted_Connection=True;");
+        //            }
+        //        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -120,6 +122,42 @@ namespace Sales_Inventory.Models
                 entity.Property(e => e.TransactionDate).HasColumnType("datetime");
 
                 entity.Property(e => e.Vat).HasColumnType("decimal(18, 2)");
+            });
+
+            modelBuilder.Entity<TblCustomer>(entity =>
+            {
+                entity.ToTable("tbl_Customers");
+
+                entity.Property(e => e.Address)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ContactNo)
+                    .HasMaxLength(15)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CustomerName)
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TotalCredit).HasColumnType("decimal(18, 2)");
+            });
+
+            modelBuilder.Entity<TblExpense>(entity =>
+            {
+                entity.ToTable("tbl_Expenses");
+
+                entity.Property(e => e.Amount).HasColumnType("decimal(18, 2)");
+
+                entity.Property(e => e.ExpenseDate).HasColumnType("datetime");
+
+                entity.Property(e => e.ExpenseType)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Receiver)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<TblOrderDetail>(entity =>

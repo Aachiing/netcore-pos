@@ -1,0 +1,127 @@
+﻿@using Sales_Inventory.Models.DTO;
+@model PaginationDTO<ExpensesDTO>;
+@{
+    ViewData["Title"] = "Expenses List";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card text-dark bg-light mb-3">
+            <div class="card-body">
+                <div class="row pb-2">
+                    <div class="col-md-2">
+                        <a type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#mdlAddExpenses"><i class="fa-solid fa-plus"></i>  Add Expenses</a>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Expense Type</th>
+                                <th>Receiver</th>
+                                <th>Amount</th>
+                                <th>Expense Date</th>
+                                <th>User</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbl-expenses-body">
+                        </tbody>
+                    </table>
+                </div>
+                <nav>
+                    <ul class="pagination justify-content-end">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        @for (int i = 1; i <= Model.page_count; i++)
+                        {
+                            <li class="page-item @(i == ViewBag.Page ? "active" :"")"><a class="page-link" asp-controller="expenses" asp-action="expenses-list-body" asp-route-page="@i">@i</a></li>
+                        }
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="mdlAddExpenses" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Expense</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="row mb-2">
+                    <div class="col-md-6 mb-2">
+                        Expense Type
+                        <input type="text" class="form-control" id="expense_type">
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        Receiver
+                        <input type="text" class="form-control" id="receiver">
+
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        Amount
+                        <input type="number" class="form-control" id="amount">
+
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        Expense Date
+                        <input type="date" class="form-control" id="expense_date">
+
+                    </div>
+                    <div class="col-md-12">
+                        <input type="button" class="btn btn-success col-12" value="Save" id="btn-save">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(function () {
+            ActiveMenu("liExpenses");
+            $("#tbl-expenses-body").load("expenses-list-body")
+        })
+
+        $("#btn-save").on("click", function () {
+
+            var obj = {
+                expense_type: $("#expense_type").val(),
+                receiver: $("#receiver").val(),
+                amount: $("#amount").val(),
+                expense_date: $("#expense_date").val()
+            }
+
+            $.ajax({
+                url: "create",
+                type: "POST",
+                data: { dto: obj },
+                success: function (response) {
+                    alert(response);
+                    window.location.reload();
+                },
+                failure: function (response) {
+                    alert(response);
+                }
+
+            });
+        })
+    </script>
+}

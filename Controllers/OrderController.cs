@@ -39,8 +39,6 @@ namespace Sales_Inventory.Controllers
                 val = s.product_id
             });
 
-          
-
             return Json(JsonConvert.SerializeObject(product.list, Formatting.Indented));
         }
 

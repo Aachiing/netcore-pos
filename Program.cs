@@ -15,6 +15,8 @@ builder.Services.AddTransient<IPaymentRepository, PaymentRepository>();
 builder.Services.AddTransient<IReceivableRepository, ReceivableRepository>();
 builder.Services.AddTransient<IReportRepository, ReportRepository>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
+builder.Services.AddTransient<ICustomerRepository, CustomerRepository>();
+builder.Services.AddTransient<IExpensesRepository, ExpensesRepository>();
 
 //Session Config
 builder.Services.AddDistributedMemoryCache();

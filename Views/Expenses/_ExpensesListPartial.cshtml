@@ -1,0 +1,26 @@
+﻿@using Sales_Inventory.Models.DTO;
+@model PaginationDTO<ExpensesDTO>;
+
+
+@if (Model.item_list.Count() > 0)
+{
+    foreach (var item in Model.item_list)
+    {
+        <tr>
+
+            <td>@item.expense_type</td>
+            <td>@item.receiver</td>
+            <td>@item.amount.ToString("#,##0.00")</td>
+            <td>@item.expense_date</td>
+            <td>@item.user_id</td>
+        </tr>
+    }
+}
+else
+{
+    <tr>
+        <td colspan="5" class="text-center">No Data Available</td>
+    </tr>
+}
+
+

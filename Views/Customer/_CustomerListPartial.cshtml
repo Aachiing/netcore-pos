@@ -1,0 +1,71 @@
+﻿@using Sales_Inventory.Models.DTO;
+@model PaginationDTO<CustomerDTO>;
+
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Customer Name</th>
+            <th>Address</th>
+            <th>Contact No</th>
+            <th>Total Credit</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.item_list.Count() > 0)
+        {
+            foreach (var item in Model.item_list)
+            {
+                <tr>
+
+                    <td>@item.customer_name</td>
+                    <td>@item.address</td>
+                    <td>@item.contact_no</td>
+                    <td>@item.total_credit</td>
+                    <td>
+
+                        <div class="row">
+                            <div class="col-lg-6 pb-1">
+                                <button type="button" class="btn btn-success btn-sm col-12" onclick="GetById(@item.id)">
+                                    <i class="fa-solid fa-pen-to-square"></i>   Edit
+                                </button>
+                            </div>
+                            <div class="col-lg-6 pb-1">
+                                <button type="button" class="btn btn-danger btn-sm col-12" onclick="Delete(@item.id)">
+                                    <i class="fa-solid fa-trash-can"></i>   Delete
+                                </button>
+                            </div>
+                        </div>
+
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="5" class="text-center">No Data Available</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<nav>
+    <ul class="pagination justify-content-end">
+        <li class="page-item disabled">
+            <a class="page-link" href="#" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        @for (int i = 1; i <= Model.page_count; i++)
+        {
+            <li class="page-item @(i == ViewBag.Page ? "active" :"")"><a class="page-link" asp-controller="inventory" asp-action="list" asp-route-page="@i">@i</a></li>
+        }
+        <li class="page-item disabled">
+            <a class="page-link" href="#" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+
