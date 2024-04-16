@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using Newtonsoft.Json;
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -12,6 +16,9 @@
     <link href="~/lib/jquery/dist/jquery-ui-1.13.2.css" rel="stylesheet" />
 </head>
 <body>
+    @{
+        var current_session = JsonConvert.DeserializeObject<Session>(HttpContextAccessor.HttpContext.Session.GetString("UserSession")!);
+    }
     <sidebar id="sidebar">
         <div class="sidenav-header">
             Sales & Inventory System
@@ -20,66 +27,114 @@
 
         <div class="sidenav-menu">
             <ul class="navbar-nav">
-                <li class="nav-item" id="liDashboard">
-                    <a class="nav-link text-white" href="#">
-                        <i class="fa-solid fa-chart-pie" style="height:20px;width:30px"></i>
-                        <span class="nav-link-text">&nbsp;Dashboard</span>
-                    </a>
-                </li>
-                <li class="nav-item active" id="liOrders">
-                    <a class="nav-link text-white" href="../orders/list">
-                        <i class="fa-solid fa-cart-plus" style="height:20px;width:30px"></i>
-                        <span class="nav-link-text">&nbsp;Orders</span>
-                    </a>
-                </li>
-                <li class="nav-item" id="liPayments">
-                    <a class="nav-link text-white" href="../acct-receivables/list">
-                        <i class="fa-solid fa-money-bill-wave" style="height:20px;width:30px"></i>
-                        <span class="nav-link-text">&nbsp;Receivables</span>
-                    </a>
-                </li>
-                <li class="nav-item" id="liExpenses">
-                    <a class="nav-link text-white" href="../expenses/list">
-                        <i class="fa-solid fa-credit-card" style="height:20px;width:30px"></i>
-                        <span class="nav-link-text">&nbsp;Expenses</span>
-                    </a>
-                </li>
-                <li class="nav-item" id="liCustomers">
-                    <a class="nav-link text-white" href="../customers/list">
-                        <i class="fa-solid fa-users" style="height:20px;width:30px"></i>
-                        <span class="nav-link-text">&nbsp;Customers</span>
-                    </a>
-                </li>
-                <li class="nav-item" id="liInventory">
-                    <a class="nav-link text-white" href="../inventory/list">
-                        <i class="fa-solid fa-warehouse" style="height:20px;width:30px"></i>
-                        <span class="nav-link-text">&nbsp;Inventory</span>
-                    </a>
-                </li>
-                <li style="margin: 0 1rem;">
-                    <a class="nav-link text-white">
-                        &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-folder-open" style="height:20px;width:30px"></i>
-                        <span class="nav-link-text">&nbsp;Reports</span>
-                    </a>
-                    <ul class="navbar-nav">
-                        <li class="nav-item" id="liDailyCashReports">
-                            <a class="nav-link text-white" href="../reports/daily-sales-view">
-                                <span class="nav-link-text">&nbsp;&nbsp;&nbsp;1. Daily Cash Sales</span>
-                            </a>
-                        </li>
-                        <li class="nav-item" id="liDailyCreditReports">
-                            <a class="nav-link text-white" href="../reports/daily-credit-view">
-                                <span class="nav-link-text">&nbsp;&nbsp;&nbsp;2. Daily Credit Sales</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="nav-item" id="liDashboard">
-                    <a class="nav-link text-white" href="../users/login">
-                        <i class="fa-solid fa-screwdriver-wrench" style="height:20px;width:30px"></i>
-                        <span class="nav-link-text">&nbsp;System Management</span>
-                    </a>
-                </li>
+                @if (current_session.user_type == "admin")
+                {
+                    <li class="nav-item" id="liDashboard">
+                        <a class="nav-link text-white" href="#">
+                            <i class="fa-solid fa-chart-pie" style="height:20px;width:30px"></i>
+                            <span class="nav-link-text">&nbsp;Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item active" id="liOrders">
+                        <a class="nav-link text-white" href="../orders/list">
+                            <i class="fa-solid fa-cart-plus" style="height:20px;width:30px"></i>
+                            <span class="nav-link-text">&nbsp;Orders</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" id="liPayments">
+                        <a class="nav-link text-white" href="../acct-receivables/list">
+                            <i class="fa-solid fa-money-bill-wave" style="height:20px;width:30px"></i>
+                            <span class="nav-link-text">&nbsp;Receivables</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" id="liExpenses">
+                        <a class="nav-link text-white" href="../expenses/list">
+                            <i class="fa-solid fa-credit-card" style="height:20px;width:30px"></i>
+                            <span class="nav-link-text">&nbsp;Expenses</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" id="liCustomers">
+                        <a class="nav-link text-white" href="../customers/list">
+                            <i class="fa-solid fa-users" style="height:20px;width:30px"></i>
+                            <span class="nav-link-text">&nbsp;Customers</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" id="liInventory">
+                        <a class="nav-link text-white" href="../inventory/list">
+                            <i class="fa-solid fa-warehouse" style="height:20px;width:30px"></i>
+                            <span class="nav-link-text">&nbsp;Inventory</span>
+                        </a>
+                    </li>
+                    <li style="margin: 0 1rem;">
+                        <a class="nav-link text-white">
+                            &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-folder-open" style="height:20px;width:30px"></i>
+                            <span class="nav-link-text">&nbsp;Reports</span>
+                        </a>
+                        <ul class="navbar-nav">
+                            <li class="nav-item" id="liDailyCashReports">
+                                <a class="nav-link text-white" href="../reports/daily-sales-view">
+                                    <span class="nav-link-text">&nbsp;&nbsp;&nbsp;1. Daily Cash Sales</span>
+                                </a>
+                            </li>
+                            <li class="nav-item" id="liDailyCreditReports">
+                                <a class="nav-link text-white" href="../reports/daily-credit-view">
+                                    <span class="nav-link-text">&nbsp;&nbsp;&nbsp;2. Daily Credit Sales</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item" id="liDashboard">
+                        <a class="nav-link text-white" href="../users/login">
+                            <i class="fa-solid fa-screwdriver-wrench" style="height:20px;width:30px"></i>
+                            <span class="nav-link-text">&nbsp;System Management</span>
+                        </a>
+                    </li>
+                }
+                else
+                {
+                    <li class="nav-item active" id="liOrders">
+                        <a class="nav-link text-white" href="../orders/list">
+                            <i class="fa-solid fa-cart-plus" style="height:20px;width:30px"></i>
+                            <span class="nav-link-text">&nbsp;Orders</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" id="liPayments">
+                        <a class="nav-link text-white" href="../acct-receivables/list">
+                            <i class="fa-solid fa-money-bill-wave" style="height:20px;width:30px"></i>
+                            <span class="nav-link-text">&nbsp;Receivables</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" id="liExpenses">
+                        <a class="nav-link text-white" href="../expenses/list">
+                            <i class="fa-solid fa-credit-card" style="height:20px;width:30px"></i>
+                            <span class="nav-link-text">&nbsp;Expenses</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" id="liCustomers">
+                        <a class="nav-link text-white" href="../customers/list">
+                            <i class="fa-solid fa-users" style="height:20px;width:30px"></i>
+                            <span class="nav-link-text">&nbsp;Customers</span>
+                        </a>
+                    </li>
+                    <li style="margin: 0 1rem;">
+                        <a class="nav-link text-white">
+                            &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-folder-open" style="height:20px;width:30px"></i>
+                            <span class="nav-link-text">&nbsp;Reports</span>
+                        </a>
+                        <ul class="navbar-nav">
+                            <li class="nav-item" id="liDailyCashReports">
+                                <a class="nav-link text-white" href="../reports/daily-sales-view">
+                                    <span class="nav-link-text">&nbsp;&nbsp;&nbsp;1. Daily Cash Sales</span>
+                                </a>
+                            </li>
+                            <li class="nav-item" id="liDailyCreditReports">
+                                <a class="nav-link text-white" href="../reports/daily-credit-view">
+                                    <span class="nav-link-text">&nbsp;&nbsp;&nbsp;2. Daily Credit Sales</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                }
                 <li class="nav-item" id="liDashboard">
                     <a class="nav-link text-white" href="../users/login">
                         <i class="fa-solid fa-right-from-bracket" style="height:20px;width:30px"></i>

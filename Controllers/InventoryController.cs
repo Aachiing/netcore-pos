@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Sales_Inventory.BLL;
 using Sales_Inventory.Models.DTO;
+using Sales_Inventory.Repository.Implementations;
 using Sales_Inventory.Repository.Interfaces;
 
 namespace Sales_Inventory.Controllers
@@ -16,14 +17,26 @@ namespace Sales_Inventory.Controllers
         }
 
         [HttpGet("list")]
-        public async Task<IActionResult> Index(int page = 1)
+        public async Task<IActionResult> Index()
+        {
+            //PaginationDTO<ProductDTO> dto = new PaginationDTO<ProductDTO>();
+
+            //dto = await _productrepository.List(page);
+
+            //ViewBag.Page = page;
+            return View();
+        }
+
+        [HttpGet("inventory-list")]
+        public async Task<IActionResult> CustomerListPartial(int page = 1, string keyword = "")
         {
             PaginationDTO<ProductDTO> dto = new PaginationDTO<ProductDTO>();
 
-            dto = await _productrepository.List(page);
+            dto = await _productrepository.List(page, 10, keyword);
 
             ViewBag.Page = page;
-            return View(dto);
+
+            return PartialView("_InventoryListPartial", dto);
         }
 
         [HttpPost("create")]

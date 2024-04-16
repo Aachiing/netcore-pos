@@ -73,18 +73,18 @@ namespace Sales_Inventory.Repository.Implementations
                     contact_no = s.ContactNo,
                     total_credit = s.TotalCredit,
                 }).Skip(page * page_size).Take(page_size).ToListAsync();
-
-                return dto;
             }
-
-            dto.item_list = await _context.TblCustomers.Where(w => w.IsDeleted == false).Select(s => new CustomerDTO
+            else
             {
-                id = s.Id,
-                customer_name = s.CustomerName,
-                address = s.Address,
-                contact_no = s.ContactNo,
-                total_credit = s.TotalCredit,
-            }).Skip(page * page_size).Take(page_size).ToListAsync();
+                dto.item_list = await _context.TblCustomers.Where(w => w.IsDeleted == false).Select(s => new CustomerDTO
+                {
+                    id = s.Id,
+                    customer_name = s.CustomerName,
+                    address = s.Address,
+                    contact_no = s.ContactNo,
+                    total_credit = s.TotalCredit,
+                }).Skip(page * page_size).Take(page_size).ToListAsync();
+            }
 
             return dto;
         }

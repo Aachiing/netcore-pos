@@ -147,6 +147,10 @@
             });
         });
 
+        $("#txt-search").on("keyup", function () {
+            $("#tblCustomerList").load("customer-list?keyword=" + $(this).val())
+        })
+
         function GetById(id) {
             $.ajax({
                 url: "get-by-id/" + id,
@@ -178,6 +182,10 @@
                 });
             }
 
+        }
+     
+        function PaginationClick(pageNo) {
+            $("#tblCustomerList").load("customer-list?page=" + pageNo)
         }
     </script>
 }

@@ -23,7 +23,7 @@
                     <td>@item.address</td>
                     <td>@item.contact_no</td>
                     <td>@item.total_credit</td>
-                    <td>
+                    <td style="width:20%">
 
                         <div class="row">
                             <div class="col-lg-6 pb-1">
@@ -59,7 +59,7 @@
         </li>
         @for (int i = 1; i <= Model.page_count; i++)
         {
-            <li class="page-item @(i == ViewBag.Page ? "active" :"")"><a class="page-link" asp-controller="inventory" asp-action="list" asp-route-page="@i">@i</a></li>
+            <li class="page-item @(i == ViewBag.Page ? "active" :"")"><a class="page-link" onclick="PaginationClick(@i)">@i</a></li>
         }
         <li class="page-item disabled">
             <a class="page-link" href="#" aria-label="Next">

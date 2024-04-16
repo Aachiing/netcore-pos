@@ -1,5 +1,6 @@
 ﻿$(document).ready(function () {
     ActiveMenu("liInventory");
+    $("#tbl-inventory-list").load("inventory-list");
     $("#btn-save").click(function () {
 
         var obj = {
@@ -57,6 +58,10 @@
 
         });
     });
+
+    $("#txt-search").on("keyup", function () {
+        $("#tbl-inventory-list").load("inventory-list?keyword=" + $(this).val())
+    })
 });
 
 function GetById(id) {
@@ -71,4 +76,7 @@ function GetById(id) {
             alert(response);
         }
     });
+}
+function PaginationClick(pageNo) {
+    $("#tbl-inventory-list").load("inventory-list?page=" + pageNo)
 }

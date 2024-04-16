@@ -9,78 +9,17 @@
         <div class="card text-dark bg-light mb-3">
             <div class="card-body">
                 <div class="row pb-2">
+                    <div class="col-md-10">
+                        <a type="button" class="btn btn-secondary float-start" data-bs-toggle="modal" data-bs-target="#mdlAddProduct"><i class="fa-solid fa-plus"></i>  Add Product</a>
+                    </div>
                     <div class="col-md-2">
-                        <a type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#mdlAddProduct"><i class="fa-solid fa-plus"></i>  Add Product</a>
+                        <input type="text" class="form-control float-end" id="txt-search" placeholder="Search" />
                     </div>
                 </div>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped" style="width:100%">
-                        <thead>
-                            <tr>
-                                <th>Item Name</th>
-                                <th>Item Code</th>
-                                <th>Barcode</th>
-                                <th>Brand</th>
-                                <th>Unit</th>
-                                <th>Quantity</th>
-                                <th>Price</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if (Model.item_list.Count() > 0)
-                            {
-                                foreach (var item in Model.item_list)
-                                {
-                                    <tr>
-                                        <td>@item.product_name</td>
-                                        <td>@item.product_code</td>
-                                        <td>@item.barcode</td>
-                                        <td>@item.brand</td>
-                                        <td>@item.unit</td>
-                                        <td>@item.quantity</td>
-                                        <td>@item.price</td>
-
-                                        <td>
-                                            <div class="col-lg-11">
-                                                <div class="row">
-                                                    <div class="col-lg-6 pb-2">
-                                                        <button type="button" class="btn btn-success btn-sm col-10" onclick="GetById(@item.product_id)">
-                                                            <i class="fa-solid fa-pen-to-square"></i>   Edit
-                                                        </button>
-                                                    </div>
-                                                    <div class="col-lg-6 pb-2">
-                                                        <button type="button" class="btn btn-danger btn-sm col-10" onclick="GetById(@item.product_id)">
-                                                            <i class="fa-solid fa-trash-can"></i>   Delete
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                }
-                            }
-                        </tbody>
-                    </table>
+                <div class="table-responsive" id="tbl-inventory-list">
+                   
                 </div>
-                <nav>
-                    <ul class="pagination justify-content-end">
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                            </a>
-                        </li>
-                        @for (int i = 1; i <= Model.page_count + 1; i++)
-                        {
-                            <li class="page-item @(i == ViewBag.Page ? "active" :"")"><a class="page-link" asp-controller="inventory" asp-action="list" asp-route-page="@i">@i</a></li>
-                        }
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
+              
             </div>
         </div>
     </div>

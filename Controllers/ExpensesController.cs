@@ -44,7 +44,7 @@ namespace Sales_Inventory.Controllers
         {
 
             if (!ModelState.IsValid)
-                return View(dto);
+                return Json(string.Join(", ", ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage)));
 
             var response = "Expense Added!";
 

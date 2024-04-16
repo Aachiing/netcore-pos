@@ -11,5 +11,7 @@ namespace Sales_Inventory.Models
         public decimal Amount { get; set; }
         public DateTime ExpenseDate { get; set; }
         public int UserId { get; set; }
+
+        public virtual TblUser User { get; set; } = null!;
     }
 }

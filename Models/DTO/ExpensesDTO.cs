@@ -8,5 +8,6 @@
         public decimal amount { get; set; }
         public DateTime expense_date { get; set; }
         public int user_id { get; set; }
+        public string user { get; set; } = "";
     }
 }

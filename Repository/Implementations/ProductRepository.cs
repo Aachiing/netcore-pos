@@ -54,7 +54,7 @@ namespace Sales_Inventory.Repository.Implementations
                 discount_rate = (decimal)s.DiscountRate
             }).FirstOrDefaultAsync()!;
         }
-        public async Task<PaginationDTO<ProductDTO>> List(int page = 1, int page_size = 10)
+        public async Task<PaginationDTO<ProductDTO>> List(int page = 1, int page_size = 10, string keyword = "")
         {
             PaginationDTO<ProductDTO> dto = new PaginationDTO<ProductDTO>();
 
@@ -63,19 +63,40 @@ namespace Sales_Inventory.Repository.Implementations
 
             dto.page_count = (int)Math.Ceiling(page_count / page_size);
 
-            dto.item_list = await _context.TblProducts.Select(s => new ProductDTO
+            if (!string.IsNullOrWhiteSpace(keyword))
             {
-                product_id = s.Id,
-                product_name = s.Name,
-                product_code = s.Code,
-                brand = s.Brand,
-                barcode = s.Barcode,
-                quantity = (int)s.Quantity,
-                unit = s.Unit,
-                price = (decimal)s.Price,
-                is_discounted = (bool)s.IsDiscounted,
-                discount_rate = (decimal)s.DiscountRate
-            }).Skip(page * page_size).Take(page_size).ToListAsync();
+                dto.item_list = await _context.TblProducts.Where(w => w.Name!.ToLower().Contains(keyword) || w.Code!.ToLower().Contains(keyword) || w.Barcode!.Contains(keyword))
+                    .Select(s => new ProductDTO
+                    {
+                        product_id = s.Id,
+                        product_name = s.Name,
+                        product_code = s.Code,
+                        brand = s.Brand,
+                        barcode = s.Barcode,
+                        quantity = (int)s.Quantity,
+                        unit = s.Unit,
+                        price = (decimal)s.Price,
+                        is_discounted = (bool)s.IsDiscounted,
+                        discount_rate = (decimal)s.DiscountRate
+                    }).Skip(page * page_size).Take(page_size).ToListAsync();
+            }
+            else
+            {
+                dto.item_list = await _context.TblProducts.Select(s => new ProductDTO
+                {
+                    product_id = s.Id,
+                    product_name = s.Name,
+                    product_code = s.Code,
+                    brand = s.Brand,
+                    barcode = s.Barcode,
+                    quantity = (int)s.Quantity,
+                    unit = s.Unit,
+                    price = (decimal)s.Price,
+                    is_discounted = (bool)s.IsDiscounted,
+                    discount_rate = (decimal)s.DiscountRate
+                }).Skip(page * page_size).Take(page_size).ToListAsync();
+            }
+
 
             return dto;
         }

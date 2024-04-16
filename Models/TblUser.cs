@@ -5,6 +5,11 @@ namespace Sales_Inventory.Models
 {
     public partial class TblUser
     {
+        public TblUser()
+        {
+            TblExpenses = new HashSet<TblExpense>();
+        }
+
         public int Id { get; set; }
         public string? Fullname { get; set; }
         public string? Username { get; set; }
@@ -12,5 +17,7 @@ namespace Sales_Inventory.Models
         public DateTime? DateCreated { get; set; }
         public bool? IsActive { get; set; }
         public string? Usertype { get; set; }
+
+        public virtual ICollection<TblExpense> TblExpenses { get; set; }
     }
 }

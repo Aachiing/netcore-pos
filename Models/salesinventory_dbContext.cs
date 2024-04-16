@@ -158,6 +158,12 @@ namespace Sales_Inventory.Models
                 entity.Property(e => e.Receiver)
                     .HasMaxLength(50)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.TblExpenses)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Expenses_Users");
             });
 
             modelBuilder.Entity<TblOrderDetail>(entity =>

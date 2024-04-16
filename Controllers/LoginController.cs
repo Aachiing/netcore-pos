@@ -42,6 +42,8 @@ namespace Sales_Inventory.Controllers
 
                 HttpContext.Session.SetString("UserSession", JsonConvert.SerializeObject(session));
 
+                var current_session = JsonConvert.DeserializeObject<Session>(HttpContext.Session.GetString("UserSession")!);
+
                 return RedirectToAction("list", "orders");
             }
             else

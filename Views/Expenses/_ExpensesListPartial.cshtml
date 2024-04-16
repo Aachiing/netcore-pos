@@ -2,25 +2,55 @@
 @model PaginationDTO<ExpensesDTO>;
 
 
-@if (Model.item_list.Count() > 0)
-{
-    foreach (var item in Model.item_list)
-    {
+<table class="table table-bordered table-striped" style="width:100%">
+    <thead>
         <tr>
-
-            <td>@item.expense_type</td>
-            <td>@item.receiver</td>
-            <td>@item.amount.ToString("#,##0.00")</td>
-            <td>@item.expense_date</td>
-            <td>@item.user_id</td>
+            <th>Expense Type</th>
+            <th>Receiver</th>
+            <th>Amount</th>
+            <th>Expense Date</th>
+            <th>User</th>
         </tr>
-    }
-}
-else
-{
-    <tr>
-        <td colspan="5" class="text-center">No Data Available</td>
-    </tr>
-}
+    </thead>
+    <tbody>
+        @if (Model.item_list.Count() > 0)
+        {
+            foreach (var item in Model.item_list)
+            {
+                <tr>
 
+                    <td>@item.expense_type</td>
+                    <td>@item.receiver</td>
+                    <td>@item.amount.ToString("#,##0.00")</td>
+                    <td>@item.expense_date</td>
+                    <td>@item.user</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="5" class="text-center">No Data Available</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<nav>
+    <ul class="pagination justify-content-end">
+        <li class="page-item disabled">
+            <a class="page-link" href="#" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        @for (int i = 1; i <= Model.page_count; i++)
+        {
+            <li class="page-item @(i == ViewBag.Page ? "active" :"")"><a class="page-link" onclick="PaginationClick(@i)">@i</a></li>
+        }
+        <li class="page-item disabled">
+            <a class="page-link" href="#" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>
 
