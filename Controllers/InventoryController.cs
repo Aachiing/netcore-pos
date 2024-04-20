@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Sales_Inventory.BLL;
 using Sales_Inventory.Models.DTO;
 using Sales_Inventory.Repository.Implementations;
 using Sales_Inventory.Repository.Interfaces;

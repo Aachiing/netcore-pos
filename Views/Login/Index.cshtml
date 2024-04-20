@@ -53,7 +53,7 @@
                                         <input type="password" asp-for="password" class="form-control" style="border-radius:10px" placeholder="Password" />
                                         <span class="text-danger" asp-validation-for="password"></span>
                                     </div>
-                                   
+
                                 </div>
                             </div>
 
@@ -76,3 +76,15 @@
     </form>
 </body>
 </html>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(function () {
+            $('input').attr('autocomplete', 'off');
+        })
+    </script>
+}

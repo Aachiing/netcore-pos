@@ -6,9 +6,6 @@
                 type: "GET",
                 success: function (data) {
                     response(JSON.parse(data))
-                    //response($.map(data, function (item) {
-                    //    return item;
-                    //}))
                 },
                 failure: function (response) {
                     alert(response)

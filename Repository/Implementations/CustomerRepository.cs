@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Sales_Inventory.Models;
 using Sales_Inventory.Models.DTO;
 using Sales_Inventory.Repository.Interfaces;
+using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
 
 namespace Sales_Inventory.Repository.Implementations
 {
@@ -24,6 +25,15 @@ namespace Sales_Inventory.Repository.Implementations
 
             await _context.TblCustomers.AddAsync(obj);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<CustomerDTO>> CustomerDDL()
+        {
+            return await _context.TblCustomers.Select(s => new CustomerDTO
+            {
+                id = s.Id,
+                customer_name = s.CustomerName
+            }).ToListAsync()!;
         }
 
         public async Task Delete(int id)

@@ -177,6 +177,8 @@
                 var activeNav = $(this).attr("id");
                 ActiveMenu(activeNav);
             });
+
+            $('input').attr('autocomplete', 'off');
         });
 
         $(document).ajaxSend(function () {

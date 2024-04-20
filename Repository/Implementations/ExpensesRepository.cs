@@ -35,7 +35,6 @@ namespace Sales_Inventory.Repository.Implementations
 
         public async Task<PaginationDTO<ExpensesDTO>> List(int page = 0, int page_size = 10, string keyword = "")
         {
-            page_size = 2;
             PaginationDTO<ExpensesDTO> dto = new PaginationDTO<ExpensesDTO>();
 
             decimal page_count = _context.TblExpenses.Count();

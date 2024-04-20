@@ -10,7 +10,7 @@
                         <input class="form-control" placeholder="[F1] Search Product" id="txtSearchItem" />
                     </div>
                 </div>
-               
+
                 <div class="table-responsive" style="height: 786px;overflow-y: scroll;">
                     <table class="table table-bordered" id="tblOrders">
                         <thead class="table-responsive-lg table-custom-bg">
@@ -155,7 +155,9 @@
                     <div class="row pb-3">
                         <div class="col-md-12 mb-2">
                             Customer Name
-                            <input type="text" class="form-control" id="txtCustomerName"/>
+                            <select class="form-select" id="txtCustomerName" asp-items="@ViewBag.CustomerDDL">
+                                <option></option>
+                            </select>
                         </div>
                     </div>
 
@@ -166,14 +168,14 @@
                         </div>
                         <div class="col-md-6 mb-2">
                             Reference No
-                            <input type="text" class="form-control" id="txtReferenceNo"/>
+                            <input type="text" class="form-control" id="txtReferenceNo" />
                         </div>
                     </div>
 
                     <div class="row pb-3 d-none" id="divCheckPayment">
                         <div class="col-md-6 mb-2">
                             Check No
-                            <input type="text" class="form-control" id="txtCheckNo"/>
+                            <input type="text" class="form-control" id="txtCheckNo" />
                         </div>
                         <div class="col-md-6 mb-2">
                             Check Amount
@@ -208,7 +210,7 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-  @*   <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css"> *@
+    @*   <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css"> *@
     <script src="~/js/salesjs.js"></script>
     <script src="~/js/openjs.js"></script>
     @* <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script> *@

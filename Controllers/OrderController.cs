@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using Sales_Inventory.Models.DTO;
 using Sales_Inventory.Repository.Interfaces;
+using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace Sales_Inventory.Controllers
 {
@@ -11,19 +13,31 @@ namespace Sales_Inventory.Controllers
         private readonly IProductRepository _productrepository;
         private readonly IPaymentRepository _paymentrepository;
         private readonly IReceivableRepository _receivablerepository;
+        private readonly ICustomerRepository _customerrepository;
         private readonly ILogger<HomeController> _logger;
 
-        public OrderController(ILogger<HomeController> logger, IProductRepository productrepository, IPaymentRepository paymentrepository, IReceivableRepository receivablerepository)
+        public OrderController(ILogger<HomeController> logger, IProductRepository productrepository, IPaymentRepository paymentrepository, IReceivableRepository receivablerepository, ICustomerRepository customerrepository)
         {
             _logger = logger;
             _productrepository = productrepository;
             _paymentrepository = paymentrepository;
             _receivablerepository = receivablerepository;
+            _customerrepository = customerrepository;
         }
 
         [Route("list")]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            List<CustomerDTO> customer = new List<CustomerDTO>();
+
+            customer = await _customerrepository.CustomerDDL();
+
+            ViewBag.CustomerDDL = customer.Select(s => new SelectListItem
+            {
+                Text = s.customer_name,
+                Value = s.customer_name
+            });
+
             return View();
         }
 

@@ -33,14 +33,14 @@ namespace Sales_Inventory.Controllers
             return View();
         }
 
-        [HttpPost("daily-sales")]
-        public async Task<IActionResult> GetDailySalesReport()
+        [HttpGet("daily-sales/{dateFrom}/{dateTo}")]
+        public async Task<IActionResult> GetDailySalesReport(DateTime dateFrom, DateTime dateTo)
         {
             string filePath = string.Empty;
 
             try
             {
-                filePath = await _reportrepository.DailyCashSalesReport();
+                filePath = await _reportrepository.DailyCashSalesReport(dateFrom, dateTo);
             }
             catch (Exception ex)
             {
@@ -50,14 +50,14 @@ namespace Sales_Inventory.Controllers
             return Json(new { status = 500, response = filePath });
         }
 
-        [HttpPost("daily-credit")]
-        public async Task<IActionResult> GetDailyCreditSalesReport()
+        [HttpGet("daily-credit/{dateFrom}/{dateTo}")]
+        public async Task<IActionResult> GetDailyCreditSalesReport(DateTime dateFrom, DateTime dateTo)
         {
             string filePath = string.Empty;
 
             try
             {
-                filePath = await _reportrepository.DailyCreditSalesReport();
+                filePath = await _reportrepository.DailyCreditSalesReport(dateFrom, dateTo);
             }
             catch (Exception ex)
             {

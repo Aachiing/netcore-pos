@@ -10,5 +10,6 @@ namespace Sales_Inventory.Repository.Interfaces
         Task<CustomerDTO> GetById(int id);
         Task Delete(int id);
         Task<bool> ExistingCustomer(CustomerDTO dto);
+        Task<List<CustomerDTO>> CustomerDDL();
     }
 }
