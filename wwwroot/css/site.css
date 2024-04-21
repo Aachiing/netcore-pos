@@ -138,3 +138,7 @@ th {
     text-align: center;
     z-index: 9999;
 }
+
+canvas {
+    height: 690px !important;
+}

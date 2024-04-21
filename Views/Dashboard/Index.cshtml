@@ -1,0 +1,148 @@
+﻿@using Sales_Inventory.Models.DTO
+@model DashboardDTO
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+<link href="~/lib/chart/app.css" rel="stylesheet" />
+<div class="row">
+    <div class="col-md-3">
+        <div class="card text-dark bg-light mb-3">
+            <div class="card-body bg-white">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="~/img/dashboard-sales.png" style="border-radius:12px" height="80px" />
+                    </div>
+                    <div class="col-md-8 pt-3">
+                        <h5 style="color:grey">Today's Cash Sales</h5>
+                        <h4>Php @Model.daily_revenue.Select(s => s.sales).FirstOrDefault()</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-dark bg-light mb-3">
+            <div class="card-body bg-white">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="~/img/dashboard-credit.png" style="border-radius:12px" height="80px" />
+                    </div>
+                    <div class="col-md-8 pt-3">
+                        <h5 style="color:grey">Today's Credit Sales</h5>
+                        <h4>Php @Model.daily_revenue.Select(s => s.credit).FirstOrDefault()</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-dark bg-light mb-3">
+            <div class="card-body bg-white">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="~/img/dashboard-expenses.png" style="border-radius:12px" height="80px" />
+                    </div>
+                    <div class="col-md-8 pt-3">
+                        <h5 style="color:grey">Today's Expenses</h5>
+                        <h4>Php @Model.daily_revenue.Select(s => s.expenses).FirstOrDefault()</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-dark bg-light mb-3">
+            <div class="card-body bg-white">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="~/img/dashboard-revenue.png" style="border-radius:12px" height="80px" />
+                    </div>
+                    <div class="col-md-8 pt-3">
+
+                        <h5 style="color:grey">Today's Revenue</h5>
+                        <h4>Php @Model.daily_revenue.Select(s => s.revenue).FirstOrDefault()</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card text-dark bg-light mb-3">
+            <div class="card-body bg-white">
+                <canvas id="chartjs-bar"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/lib/chart/app.js"></script>
+    <script>
+        $(document).ready(function () {
+            ActiveMenu("liDashboard");
+
+
+            var months = @Html.Raw(Json.Serialize(Model.monthly_revenue.Select(s => s.month)));
+
+            new Chart(document.getElementById("chartjs-bar"), {
+                type: "bar",
+                data: {
+                    labels: months,
+                    datasets: [{
+                        label: "Cash Sales",
+                        backgroundColor: "#9694ff",
+                        borderColor: "#9694ff",
+                        hoverBackgroundColor: "#9694ff",
+                        hoverBorderColor: "#9694ff",
+                        data: @Html.Raw(Json.Serialize(Model.monthly_revenue.Select(s => s.sales))),
+                        barPercentage: .75,
+                        categoryPercentage: .5
+                    }, {
+                        label: "Credit Sales",
+                        backgroundColor: "#ff7976",
+                        borderColor: "#ff7976",
+                        hoverBackgroundColor: "#ff7976",
+                        hoverBorderColor: "#ff7976",
+                        data: @Html.Raw(Json.Serialize(Model.monthly_revenue.Select(s => s.credit))),
+                        barPercentage: .75,
+                        categoryPercentage: .5
+                    }, {
+                        label: "Expenses",
+                        backgroundColor: "#57caeb",
+                        borderColor: "#57caeb",
+                        hoverBackgroundColor: "#57caeb",
+                        hoverBorderColor: "#57caeb",
+                        data: @Html.Raw(Json.Serialize(Model.monthly_revenue.Select(s => s.expenses))),
+                        barPercentage: .75,
+                        categoryPercentage: .5
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            gridLines: {
+                                display: false
+                            },
+                            stacked: false
+                        }],
+                        xAxes: [{
+                            stacked: false,
+                            gridLines: {
+                                color: "transparent"
+                            }
+                        }]
+                    }
+                }
+            });
+        });
+    </script>
+}

@@ -44,7 +44,11 @@ namespace Sales_Inventory.Controllers
 
                 var current_session = JsonConvert.DeserializeObject<Session>(HttpContext.Session.GetString("UserSession")!);
 
-                return RedirectToAction("list", "orders");
+                if (user.user_type == "admin")
+                    return RedirectToAction("index", "dashboard");
+                else
+                    return RedirectToAction("list", "orders");
+
             }
             else
             {
