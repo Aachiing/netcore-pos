@@ -6,5 +6,7 @@ namespace Sales_Inventory.Repository.Interfaces
     {
         Task PostCashPayment(OrderHeaderDTO dto);
         Task<ReceivableDTO> PostCreditPayment(OrderHeaderDTO dto);
+        Task<string> GetOrNo();
+        Task<string> GetTRANo();
     }
 }

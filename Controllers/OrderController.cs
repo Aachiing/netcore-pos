@@ -38,6 +38,9 @@ namespace Sales_Inventory.Controllers
                 Value = s.customer_name
             });
 
+            ViewBag.Orno = await _paymentrepository.GetOrNo();
+            ViewBag.TRAno = await _paymentrepository.GetTRANo();
+
             return View();
         }
 

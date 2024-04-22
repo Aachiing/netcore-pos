@@ -9,13 +9,14 @@ namespace Sales_Inventory.Repository.Implementations
     {
         private readonly salesinventory_dbContext _context;
         public PaymentRepository(salesinventory_dbContext context) { _context = context; }
+
         public async Task PostCashPayment(OrderHeaderDTO dto)
         {
             decimal _gross = dto.order_details.Sum(s => s.total_amount);
             decimal vat_rate = (decimal)1.12;
 
             TblOrderHeader order_header = new TblOrderHeader();
-            order_header.OrderNo = GetOrderNo();
+            order_header.OrderNo = dto.order_no;
             order_header.CustomerName = dto.customer_name;
             order_header.AmountPaid = dto.amount_paid;
             order_header.Gross = _gross;
@@ -63,7 +64,7 @@ namespace Sales_Inventory.Repository.Implementations
             decimal vat_rate = (decimal)1.12;
 
             TblCreditHeader order_header = new TblCreditHeader();
-            order_header.OrderNo = GetOrderNo();
+            order_header.OrderNo = dto.order_no;
             order_header.CustomerName = dto.customer_name;
             order_header.AmountPaid = dto.amount_paid;
             order_header.Balance = (_gross - dto.amount_paid);
@@ -119,17 +120,27 @@ namespace Sales_Inventory.Repository.Implementations
                 cashier_id = order_header.CashierId
             };
         }
-        private string GetOrderNo()
+        public async Task<string> GetOrNo()
         {
-            var order_no = _context.TblOrderHeaders.OrderByDescending(ob => ob.Id).Select(ld => ld.OrderNo).FirstOrDefault();
+            var order_no = _context.TblOrderHeaders.OrderByDescending(ob => ob.Id).Select(s => s.OrderNo).FirstOrDefault();
 
             if (!string.IsNullOrWhiteSpace(order_no))
-            {
                 order_no = (Convert.ToInt32(order_no) + 1).ToString().PadLeft(8, '0');
-                return order_no;
-            }
+            else
+                order_no = _context.TblReceipts.OrderByDescending(ob => ob.From).Where(w => w.Type == "OR").Select(s => s.From).FirstOrDefault()!;
 
-            return "00000001";
+            return order_no;
+        }
+        public async Task<string> GetTRANo()
+        {
+            var order_no = _context.TblCreditHeaders.OrderByDescending(ob => ob.Id).Select(s => s.OrderNo).FirstOrDefault();
+
+            if (!string.IsNullOrWhiteSpace(order_no))
+                order_no = (Convert.ToInt32(order_no) + 1).ToString().PadLeft(8, '0');
+            else
+                order_no = _context.TblReceipts.OrderByDescending(ob => ob.From).Where(w => w.Type == "TRA").Select(s => s.From).FirstOrDefault()!;
+
+            return order_no;
         }
     }
 }

@@ -254,6 +254,7 @@ function GetPaymentDetails() {
         check_date: $("#dtCheckDate").val(),
         amount_paid: $("#txtAmountPaid").val(),
         transaction_type: $("#txtTransactionType").val(),
+        order_no: $("#txtTransactionType").val() == "CREDIT" ? $("#txtTRANo").val() : $("#txtORNo").val(),
         order_details: obj_order_details,
     }
 
