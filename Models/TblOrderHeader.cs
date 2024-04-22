@@ -15,6 +15,8 @@ namespace Sales_Inventory.Models
         public DateTime TransactionDate { get; set; }
         public int? PosId { get; set; }
         public decimal? AmountPaid { get; set; }
+        public decimal? Discount { get; set; }
+        public string? DiscountRemarks { get; set; }
         public decimal Gross { get; set; }
         public decimal? Net { get; set; }
         public decimal? Vat { get; set; }

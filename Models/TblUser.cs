@@ -8,6 +8,8 @@ namespace Sales_Inventory.Models
         public TblUser()
         {
             TblExpenses = new HashSet<TblExpense>();
+            TblProductHistories = new HashSet<TblProductHistory>();
+            TblReceipts = new HashSet<TblReceipt>();
         }
 
         public int Id { get; set; }
@@ -19,5 +21,7 @@ namespace Sales_Inventory.Models
         public string? Usertype { get; set; }
 
         public virtual ICollection<TblExpense> TblExpenses { get; set; }
+        public virtual ICollection<TblProductHistory> TblProductHistories { get; set; }
+        public virtual ICollection<TblReceipt> TblReceipts { get; set; }
     }
 }

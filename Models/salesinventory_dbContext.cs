@@ -23,6 +23,8 @@ namespace Sales_Inventory.Models
         public virtual DbSet<TblOrderDetail> TblOrderDetails { get; set; } = null!;
         public virtual DbSet<TblOrderHeader> TblOrderHeaders { get; set; } = null!;
         public virtual DbSet<TblProduct> TblProducts { get; set; } = null!;
+        public virtual DbSet<TblProductHistory> TblProductHistories { get; set; } = null!;
+        public virtual DbSet<TblReceipt> TblReceipts { get; set; } = null!;
         public virtual DbSet<TblReceivable> TblReceivables { get; set; } = null!;
         public virtual DbSet<TblUser> TblUsers { get; set; } = null!;
 
@@ -102,6 +104,12 @@ namespace Sales_Inventory.Models
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("CustomerTIN");
+
+                entity.Property(e => e.Discount).HasColumnType("decimal(18, 2)");
+
+                entity.Property(e => e.DiscountRemarks)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Gross).HasColumnType("decimal(18, 2)");
 
@@ -230,6 +238,12 @@ namespace Sales_Inventory.Models
                     .IsUnicode(false)
                     .HasColumnName("CustomerTIN");
 
+                entity.Property(e => e.Discount).HasColumnType("decimal(18, 2)");
+
+                entity.Property(e => e.DiscountRemarks)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Gross).HasColumnType("decimal(18, 2)");
 
                 entity.Property(e => e.Net).HasColumnType("decimal(18, 2)");
@@ -278,6 +292,66 @@ namespace Sales_Inventory.Models
                 entity.Property(e => e.Unit)
                     .HasMaxLength(50)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<TblProductHistory>(entity =>
+            {
+                entity.ToTable("tbl_product_history");
+
+                entity.Property(e => e.Barcode)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Brand)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Code)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DateAdded).HasColumnType("datetime");
+
+                entity.Property(e => e.DiscountRate).HasColumnType("decimal(18, 2)");
+
+                entity.Property(e => e.Name)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Price).HasColumnType("decimal(18, 2)");
+
+                entity.Property(e => e.Unit)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.AddedByNavigation)
+                    .WithMany(p => p.TblProductHistories)
+                    .HasForeignKey(d => d.AddedBy)
+                    .HasConstraintName("FK_tbl_product_history_tbl_Users");
+            });
+
+            modelBuilder.Entity<TblReceipt>(entity =>
+            {
+                entity.ToTable("tbl_Receipts");
+
+                entity.Property(e => e.DateAdded).HasColumnType("datetime");
+
+                entity.Property(e => e.From)
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.To)
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Type)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.AddedByNavigation)
+                    .WithMany(p => p.TblReceipts)
+                    .HasForeignKey(d => d.AddedBy)
+                    .HasConstraintName("FK_tbl_Receipts_tbl_Users");
             });
 
             modelBuilder.Entity<TblReceivable>(entity =>

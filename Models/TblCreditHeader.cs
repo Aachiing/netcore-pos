@@ -16,6 +16,8 @@ namespace Sales_Inventory.Models
         public int? PosId { get; set; }
         public bool? IsPaid { get; set; }
         public decimal? AmountPaid { get; set; }
+        public decimal? Discount { get; set; }
+        public string? DiscountRemarks { get; set; }
         public decimal? Balance { get; set; }
         public decimal Gross { get; set; }
         public decimal? Net { get; set; }

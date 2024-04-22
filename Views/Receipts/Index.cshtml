@@ -1,0 +1,174 @@
+﻿@{
+    ViewData["Title"] = "Receipts List";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card text-dark bg-light mb-3">
+            <div class="card-body">
+                <div class="row pb-2">
+                    <div class="col-md-10">
+                        <a type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#mdlAddReceipt"><i class="fa-solid fa-plus"></i>  Add Receipt</a>
+                    </div>
+                    <div class="col-md-2 float-end">
+                        <input type="text" class="form-control float-end col-2" id="txt-search" placeholder="Search" />
+                    </div>
+                </div>
+                <div class="table-responsive" id="tbl-receipts-body">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="mdlAddReceipt" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Receipt</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="mb-2">
+                    Receipt type
+                    <select class="form-select" id="type">
+                        <option value="OR">OR</option>
+                        <option value="TRA">TRA</option>
+                    </select>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-6 mb-2">
+                        From
+                        <input type="text" class="form-control" id="or_from">
+
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        To
+                        <input type="number" class="form-control" id="or_to">
+                    </div>
+                    <div class="col-md-12">
+                        <input type="button" class="btn btn-success col-12" value="Save" id="btn-save">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="mdlUpdateReceipt" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Update Receipt</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="divUpdateReceipt">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" class="form-control" id="receipt_id">
+                <div class="mb-2">
+                    Receipt type
+                    <select class="form-select" id="type">
+                        <option value="OR">OR</option>
+                        <option value="TRA">TRA</option>
+                    </select>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-6 mb-2">
+                        From
+                        <input type="text" class="form-control" id="or_from">
+
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        To
+                        <input type="number" class="form-control" id="or_to">
+                    </div>
+                    <div class="col-md-12">
+                        <input type="button" class="btn btn-success col-12" value="Save" id="btn-update">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(function () {
+            ActiveMenu("liOR");
+            $("#tbl-receipts-body").load("receipts-list");
+        });
+
+        $("#btn-save").on("click", function () {
+
+            var obj = {
+                type: $("#type").val(),
+                or_from: $("#or_from").val(),
+                or_to: $("#or_to").val(),
+            }
+
+            $.ajax({
+                url: "create",
+                type: "POST",
+                data: { dto: obj },
+                success: function (response) {
+                    alert(response);
+                    window.location.reload();
+                },
+                failure: function (response) {
+                    alert(response);
+                }
+
+            });
+        })
+
+        $("#btn-update").click(function () {
+
+            var obj = {
+                receipt_id: $("#divUpdateReceipt #receipt_id").val(),
+                type: $("#divUpdateReceipt #type").val(),
+                or_from: $("#divUpdateReceipt #or_from").val(),
+                or_to: $("#divUpdateReceipt #or_to").val()
+            }
+
+            $.ajax({
+                url: "update",
+                type: "PUT",
+                data: { dto: obj },
+                success: function (response) {
+                    alert(response);
+                    window.location.reload();
+                },
+                failure: function (response) {
+                    alert(response);
+                }
+
+            });
+        });
+
+        $("#txt-search").on("keyup", function () {
+            $("#tbl-receipts-body").load("receipts-list?keyword=" + $(this).val())
+        })
+
+        function GetById(id) {
+            $.ajax({
+                url: "get-by-id/" + id,
+                type: "GET",
+                success: function (response) {
+                    ClearFields("divUpdateReceipt", response);
+                    $("#mdlUpdateReceipt").modal("show");
+                },
+                failure: function (response) {
+                    alert(response);
+                }
+            });
+        }
+
+        function PaginationClick(pageNo) {
+            $("#tbl-receipts-body").load("receipts-list?page=" + pageNo)
+        }
+    </script>
+}
