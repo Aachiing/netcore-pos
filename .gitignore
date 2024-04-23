@@ -58,3 +58,4 @@ dkms.conf
 /bin/Release/net6.0
 /Properties/PublishProfiles
 /Sales&Inventory.csproj.user
+/wwwroot/reports/DailyExpensesReport.pdf

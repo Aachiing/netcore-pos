@@ -44,6 +44,9 @@
     shortcut.add("F5", function () {
         $("#btn-credit").trigger('click');
     });
+    shortcut.add("F6", function () {
+        $("#btn-discount").trigger('click');
+    });
 
     $("#btn-qty").on('click', function () {
         var activeRow = $("#tblOrders").find("tr.active");
@@ -80,8 +83,9 @@
     $("#btn-cash").on('click', function () {
         if (ValidOrder()) {
             $("#txtPaymentType").val("CASH");
-            $("#divCheckPayment,#divCardPayment").addClass("d-none");
-            $("#divCreditPaymentType").removeClass("d-none");
+            $("#divCheckPayment,#divCardPayment,#divddlCustomerName").addClass("d-none");
+            $("#divTRA").addClass("d-none");
+            $("#divCreditPaymentType,#divtxtCustomerName").removeClass("d-none");
             $("#txtTransactionType").val("");
             $("#mdlPaymentDetails").modal("show");
 
@@ -95,9 +99,15 @@
     $("#btn-credit").on('click', function () {
         if (ValidOrder()) {
             $("#txtTransactionType").val("CREDIT");
-            $("#divCreditPaymentType").removeClass("d-none");
-            $("#divCheckPayment,#divCardPayment").addClass("d-none");
+            $("#divCreditPaymentType,#divddlCustomerName").removeClass("d-none");
+            $("#divTRA").removeClass("d-none");
+            $("#divCheckPayment,#divCardPayment,#divtxtCustomerName").addClass("d-none");
             $("#mdlPaymentDetails").modal("show");
+        }
+    });
+    $("#btn-discount").on('click', function () {
+        if (ValidOrder()) {
+            $("#mdlDiscount").modal("show");
         }
     });
 
@@ -119,13 +129,18 @@
         }
     });
 
+    $("#mdlDiscount .btn-success").on('click', function () {
+        AddDiscount();
+    });
+    $("#mdlDiscount").enterKey(function () {
+        $("#mdlDiscount .btn-success").trigger("click");
+    })
     $("#mdlItemQty .btn-success").on('click', function () {
         AddItemQuantity();
     });
     $("#mdlItemQty").enterKey(function () {
         $("#mdlItemQty .btn-success").trigger("click");
     })
-
     $("#mdlVoidItem .btn-success").on('click', function () {
         VoidItem($("#txtPassword").val())
     });
@@ -137,6 +152,9 @@
     })
     $("#mdlPaymentDetails .btn-secondary").on('click', function () {
         PostPayment();
+    });
+    $("#mdlItemQty .btn-success").on('click', function () {
+        AddItemQuantity();
     });
 })
 
@@ -173,6 +191,7 @@ function ComputeTotalAmount() {
     var amount = 0;
     var itemCount = 0;
     var vat = 1.12;
+    var discount = $("#txtDiscount").val();
 
     $('#tblOrders > tbody > tr').each(function () {
         amount += parseFloat($(this).find("td:eq(6)").text());
@@ -180,7 +199,7 @@ function ComputeTotalAmount() {
     })
 
     $("#spnItemCount").text(itemCount);
-    $("#spnSubTotal").text((amount - ((amount / vat) * 0.12)).toFixed(2));
+    $("#spnSubTotal").text((amount).toFixed(2));
     $("#spnVat").text(((amount / vat) * 0.12).toFixed(2));
     $("#spnTotal").text(parseFloat(amount).toFixed(2));
 }
@@ -245,7 +264,7 @@ function GetPaymentDetails() {
     })
 
     var obj_order_header = {
-        customer_name: $("#txtCustomerName").val(),
+        customer_name: $("#txtTransactionType").val() == "CREDIT" ? $("#ddlCustomerName").val() : $("#txtCustomerName").val(),
         payment_type: $("#txtPaymentType").val(),
         card_no: $("#txtCardNo").val(),
         reference_no: $("#txtReferenceNo").val(),
@@ -253,6 +272,8 @@ function GetPaymentDetails() {
         check_amount: $("#txtCheckAmt").val(),
         check_date: $("#dtCheckDate").val(),
         amount_paid: $("#txtAmountPaid").val(),
+        discount: $("#txtDiscount").val(),
+        remarks: $("#txtRemarks").val(),
         transaction_type: $("#txtTransactionType").val(),
         order_no: $("#txtTransactionType").val() == "CREDIT" ? $("#txtTRANo").val() : $("#txtORNo").val(),
         order_details: obj_order_details,
@@ -260,10 +281,10 @@ function GetPaymentDetails() {
 
     return obj_order_header;
 }
-function ValidatePaymentDetails(payment_type) {
+function ValidatePaymentDetails(payment_type,transaction_type) {
     var invalid_input = 0;
 
-    if (payment_type == "CARD") {
+    if (payment_type == "CARD" && transaction_type != "CREDIT") {
 
         if ($("#txtCustomerName").val() == '') {
             $("#txtCustomerName").css("border", "1px solid red");
@@ -287,7 +308,7 @@ function ValidatePaymentDetails(payment_type) {
 
         return invalid_input;
     }
-    else if (payment_type == "CHECK") {
+    else if (payment_type == "CHECK" && transaction_type != "CREDIT") {
 
         if ($("#txtCustomerName").val() == '') {
             $("#txtCustomerName").css("border", "1px solid red");
@@ -316,7 +337,7 @@ function ValidatePaymentDetails(payment_type) {
 
         return invalid_input;
     }
-    else if (payment_type == "CASH") {
+    else if (payment_type == "CASH" && transaction_type != "CREDIT") {
 
         if ($("#txtCustomerName").val() == '') {
             $("#txtCustomerName").css("border", "1px solid red");
@@ -332,7 +353,7 @@ function ValidatePaymentDetails(payment_type) {
     return invalid_input;
 }
 function PostPayment() {
-    var count = ValidatePaymentDetails($("#txtPaymentType").val());
+    var count = ValidatePaymentDetails($("#txtPaymentType").val(), $("#txtTransactionType").val());
 
     if (count == 0) {
         $.ajax({
@@ -364,4 +385,15 @@ function ValidOrder() {
     }
 
     return true;
+}
+function AddDiscount() {
+    ComputeTotalAmount();
+
+    var discount = parseFloat($("#txtDiscount").val());
+    var total = parseFloat($("#spnTotal").text());
+
+    $("#spnDiscount").text(discount.toFixed(2));
+    $("#spnTotal").text((total - discount).toFixed(2));
+
+    $("#mdlDiscount").modal("hide");
 }

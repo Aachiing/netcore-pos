@@ -56,6 +56,12 @@
                                 <span class="float-end" id="spnSubTotal">0.00</span>
                             </div>
                             <div class="col-md-6">
+                                <span>Discount:</span>
+                            </div>
+                            <div class="col-md-6">
+                                <span class="float-end" id="spnDiscount">0.00</span>
+                            </div>
+                            <div class="col-md-6">
                                 <span>VAT:</span>
                             </div>
                             <div class="col-md-6">
@@ -76,6 +82,9 @@
                 </div>
                 <div class="col-md-6 pb-2">
                     <button type="button" class="btn btn-primary col-12" id="btn-void">[F3] Void</button>
+                </div>
+                <div class="col-md-12 pb-2">
+                    <button type="button" class="btn btn-primary col-12" id="btn-discount">[F6] Discount</button>
                 </div>
                 <div class="col-md-12 pb-2">
                     <button type="button" class="btn btn-success col-12" id="btn-cash">[F4] Cash</button>
@@ -144,7 +153,7 @@
                     <input type="hidden" class="form-control" id="txtPaymentType" value="CASH" />
                     <input type="hidden" class="form-control" id="txtTransactionType" />
                     <div class="row pb-3 d-none" id="divCreditPaymentType">
-                        <div class="col-md-12 mb-2">
+                        <div class="col-md-12 mb-2" id="divTRA">
                             TRA No
                             <input type="text" class="form-control" id="txtTRANo" value="@ViewBag.TRAno" />
                         </div>
@@ -158,9 +167,13 @@
                         </div>
                     </div>
                     <div class="row pb-3">
-                        <div class="col-md-12 mb-2">
+                        <div class="col-md-12 mb-2" id="divtxtCustomerName">
                             Customer Name
-                            <select class="form-select" id="txtCustomerName" asp-items="@ViewBag.CustomerDDL">
+                            <input type="text" class="form-control" id="txtCustomerName" />
+                        </div>
+                        <div class="col-md-12 mb-2" id="divddlCustomerName">
+                            Customer Name
+                            <select class="form-select" id="ddlCustomerName" asp-items="@ViewBag.CustomerDDL">
                                 <option></option>
                             </select>
                         </div>
@@ -211,12 +224,38 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="mdlDiscount" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Discount</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form>
+                <div class="modal-body">
+                    <div class="row pb-3">
+                        <div class="col-md-12 mb-2">
+                            Amount
+                            <input type="number" class="form-control" id="txtDiscount"/>
+                        </div>
+                        <div class="col-md-12 mb-2">
+                            Remarks
+                            <input type="text" class="form-control" id="txtRemarks" />
+                        </div>
+                        <div class="col-md-12 mb-2">
+                            <input type="button" class="btn btn-success col-12" value="Accept" />
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    @*   <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css"> *@
+
     <script src="~/js/salesjs.js"></script>
     <script src="~/js/openjs.js"></script>
-    @* <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script> *@
 }

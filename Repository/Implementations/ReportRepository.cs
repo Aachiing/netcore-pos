@@ -1,6 +1,7 @@
 ﻿using iText.IO.Font.Constants;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Layout;
 using iText.Layout.Borders;
@@ -41,27 +42,27 @@ namespace Sales_Inventory.Repository.Implementations
             var current_session = JsonConvert.DeserializeObject<Session>(_httpContextAccessor.HttpContext!.Session.GetString("UserSession")!);
 
             string webRootPath = _webHostEnvironment.WebRootPath;
-            string path = Path.Combine(webRootPath, "reports");
+            string path = System.IO.Path.Combine(webRootPath, "reports");
             string filePath = $"{path}/DailySalesReport.pdf";
 
-            string[] table_header = { "Order No", "Customer Name", "Item Count", "Amount", "Payment Type", "Payment Date" };
+            string[] table_header = { "Order No", "Customer Name", "Item Count", "Net", "Gross", "Discount", "Remarks", "Payment Type" };
             var table_data = _reportDAL.ListDailyCashSalesReport(dateFrom, dateTo);//ListDailyCashSalesReport();
-            string total_sales = table_data.Sum(s => s.amount).ToString();
+            string total_sales = table_data.Sum(s => s.net).ToString();
 
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filePath));
-            Document doc = new Document(pdfDoc);
+            Document doc = new Document(pdfDoc, PageSize.A4.Rotate());
             PdfFont font = PdfFontFactory.CreateFont(StandardFonts.TIMES_ROMAN);
 
             doc.SetMargins(10, 10, 10, 10);
 
-            doc.Add(new Paragraph("D'Home Hardware").SetMultipliedLeading(0.5f).SetFontSize(22).SetFont(font).SetTextAlignment(TextAlignment.CENTER));
+            doc.Add(new Paragraph("D' Home Hardware").SetMultipliedLeading(0.5f).SetFontSize(22).SetFont(font).SetTextAlignment(TextAlignment.CENTER));
             doc.Add(new Paragraph("Koronadal City, South Cotabato").SetMultipliedLeading(0.5f).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER));
             doc.Add(new Paragraph("Daily Cash Sales Report").SetMultipliedLeading(0.5f).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER));
             doc.Add(new Paragraph(DateTime.Now.ToString("MM/dd/yyyy")).SetMultipliedLeading(0.5f).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER));
 
             doc.Add(new Paragraph(".").SetFont(font).SetFontSize(14));
 
-            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 20, 25, 20, 20, 20, 20 })).UseAllAvailableWidth();
+            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 10, 20, 10, 10, 10, 10, 10, 10 })).UseAllAvailableWidth();
 
             foreach (var header in table_header)
             {
@@ -96,12 +97,33 @@ namespace Sales_Inventory.Repository.Implementations
                 item_count.Add(new Paragraph(data.item_count.ToString()).SetFontSize(9).SetTextAlignment(TextAlignment.CENTER));
                 table.AddCell(item_count);
 
+                Cell net = new Cell();
+                net.SetMinHeight(18);
+                net.SetBorder(Border.NO_BORDER);
+                net.SetVerticalAlignment(VerticalAlignment.MIDDLE);
+                net.Add(new Paragraph(data.net.ToString()).SetFontSize(9).SetTextAlignment(TextAlignment.CENTER));
+                table.AddCell(net);
+
                 Cell amount = new Cell();
                 amount.SetMinHeight(18);
                 amount.SetBorder(Border.NO_BORDER);
                 amount.SetVerticalAlignment(VerticalAlignment.MIDDLE);
                 amount.Add(new Paragraph(data.amount.ToString()).SetFontSize(9).SetTextAlignment(TextAlignment.CENTER));
                 table.AddCell(amount);
+
+                Cell discount = new Cell();
+                discount.SetMinHeight(18);
+                discount.SetBorder(Border.NO_BORDER);
+                discount.SetVerticalAlignment(VerticalAlignment.MIDDLE);
+                discount.Add(new Paragraph(data.discount.ToString()).SetFontSize(9).SetTextAlignment(TextAlignment.CENTER));
+                table.AddCell(discount);
+
+                Cell remarks = new Cell();
+                remarks.SetMinHeight(18);
+                remarks.SetBorder(Border.NO_BORDER);
+                remarks.SetVerticalAlignment(VerticalAlignment.MIDDLE);
+                remarks.Add(new Paragraph(data.remarks).SetFontSize(9).SetTextAlignment(TextAlignment.CENTER));
+                table.AddCell(remarks);
 
                 Cell payment_type = new Cell();
                 payment_type.SetMinHeight(18);
@@ -110,17 +132,11 @@ namespace Sales_Inventory.Repository.Implementations
                 payment_type.Add(new Paragraph(data.payment_type).SetFontSize(9).SetTextAlignment(TextAlignment.CENTER));
                 table.AddCell(payment_type);
 
-                Cell payment_date = new Cell();
-                payment_date.SetMinHeight(18);
-                payment_date.SetBorder(Border.NO_BORDER);
-                payment_date.SetVerticalAlignment(VerticalAlignment.MIDDLE);
-                payment_date.Add(new Paragraph(data.payment_date.ToString("MM/dd/yyyy HH:mm")).SetFontSize(9).SetTextAlignment(TextAlignment.CENTER));
-                table.AddCell(payment_date);
             }
 
             doc.Add(table);
 
-            doc.Add(new Paragraph($"Total Sales:  {total_sales}").SetFontSize(10));
+            doc.Add(new Paragraph($"Total Expenses:  {total_sales}").SetFontSize(10));
 
             doc.Close();
 
@@ -129,27 +145,27 @@ namespace Sales_Inventory.Repository.Implementations
         public async Task<string> DailyCreditSalesReport(DateTime dateFrom, DateTime dateTo)
         {
             string webRootPath = _webHostEnvironment.WebRootPath;
-            string path = Path.Combine(webRootPath, "reports");
+            string path = System.IO.Path.Combine(webRootPath, "reports");
             string filePath = $"{path}/DailyCreditSalesReport.pdf";
 
-            string[] table_header = { "Order No", "Customer Name", "Item Count", "Amount", "Payment Type", "Payment Date" };
+            string[] table_header = { "Order No", "Customer Name", "Item Count", "Net", "Gross", "Discount", "Remarks", "Payment Type" };
             var table_data = _reportDAL.ListDailyCreditSalesReport(dateFrom, dateTo);
-            string total_sales = table_data.Sum(s => s.amount).ToString();
+            string total_sales = table_data.Sum(s => s.net).ToString();
 
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filePath));
-            Document doc = new Document(pdfDoc);
+            Document doc = new Document(pdfDoc, PageSize.A4.Rotate());
             PdfFont font = PdfFontFactory.CreateFont(StandardFonts.TIMES_ROMAN);
 
             doc.SetMargins(10, 10, 10, 10);
 
-            doc.Add(new Paragraph("D'Home Hardware").SetMultipliedLeading(0.5f).SetFontSize(22).SetFont(font).SetTextAlignment(TextAlignment.CENTER));
+            doc.Add(new Paragraph("D' Home Hardware").SetMultipliedLeading(0.5f).SetFontSize(22).SetFont(font).SetTextAlignment(TextAlignment.CENTER));
             doc.Add(new Paragraph("Koronadal City, South Cotabato").SetMultipliedLeading(0.5f).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER));
             doc.Add(new Paragraph("Daily Credit Sales Report").SetMultipliedLeading(0.5f).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER));
             doc.Add(new Paragraph(DateTime.Now.ToString("MM/dd/yyyy")).SetMultipliedLeading(0.5f).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER));
 
             doc.Add(new Paragraph(".").SetMultipliedLeading(1.5f).SetFont(font).SetFontSize(14));
 
-            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 20, 25, 20, 20, 20, 20 })).UseAllAvailableWidth();
+            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 10, 20, 10, 10, 10, 10, 10, 10 })).UseAllAvailableWidth();
 
             foreach (var header in table_header)
             {
@@ -184,6 +200,13 @@ namespace Sales_Inventory.Repository.Implementations
                 item_count.Add(new Paragraph(data.item_count.ToString()).SetFontSize(9).SetTextAlignment(TextAlignment.CENTER));
                 table.AddCell(item_count);
 
+                Cell net = new Cell();
+                net.SetMinHeight(18);
+                net.SetBorder(Border.NO_BORDER);
+                net.SetVerticalAlignment(VerticalAlignment.MIDDLE);
+                net.Add(new Paragraph(data.net.ToString()).SetFontSize(9).SetTextAlignment(TextAlignment.CENTER));
+                table.AddCell(net);
+
                 Cell amount = new Cell();
                 amount.SetMinHeight(18);
                 amount.SetBorder(Border.NO_BORDER);
@@ -191,19 +214,26 @@ namespace Sales_Inventory.Repository.Implementations
                 amount.Add(new Paragraph(data.amount.ToString()).SetFontSize(9).SetTextAlignment(TextAlignment.CENTER));
                 table.AddCell(amount);
 
+                Cell discount = new Cell();
+                discount.SetMinHeight(18);
+                discount.SetBorder(Border.NO_BORDER);
+                discount.SetVerticalAlignment(VerticalAlignment.MIDDLE);
+                discount.Add(new Paragraph(data.discount.ToString()).SetFontSize(9).SetTextAlignment(TextAlignment.CENTER));
+                table.AddCell(discount);
+
+                Cell remarks = new Cell();
+                remarks.SetMinHeight(18);
+                remarks.SetBorder(Border.NO_BORDER);
+                remarks.SetVerticalAlignment(VerticalAlignment.MIDDLE);
+                remarks.Add(new Paragraph(data.remarks).SetFontSize(9).SetTextAlignment(TextAlignment.CENTER));
+                table.AddCell(remarks);
+
                 Cell payment_type = new Cell();
                 payment_type.SetMinHeight(18);
                 payment_type.SetBorder(Border.NO_BORDER);
                 payment_type.SetVerticalAlignment(VerticalAlignment.MIDDLE);
                 payment_type.Add(new Paragraph(data.payment_type).SetFontSize(9).SetTextAlignment(TextAlignment.CENTER));
                 table.AddCell(payment_type);
-
-                Cell payment_date = new Cell();
-                payment_date.SetMinHeight(18);
-                payment_date.SetBorder(Border.NO_BORDER);
-                payment_date.SetVerticalAlignment(VerticalAlignment.MIDDLE);
-                payment_date.Add(new Paragraph(data.payment_date.ToString("MM/dd/yyyy HH:mm")).SetFontSize(9).SetTextAlignment(TextAlignment.CENTER));
-                table.AddCell(payment_date);
             }
 
             doc.Add(table);
@@ -212,6 +242,90 @@ namespace Sales_Inventory.Repository.Implementations
             doc.Close();
 
             return "/reports/DailyCreditSalesReport.pdf";
+        }
+
+        public async Task<string> DailyExpensesReport(DateTime dateFrom, DateTime dateTo)
+        {
+
+            string webRootPath = _webHostEnvironment.WebRootPath;
+            string path = System.IO.Path.Combine(webRootPath, "reports");
+            string filePath = $"{path}/DailyExpensesReport.pdf";
+
+            string[] table_header = { "Expense Type", "Receiver", "Amount", "Date", "Added By" };
+            var table_data = _reportDAL.ListDailyExpensesReport(dateFrom, dateTo);
+            string total_expense = table_data.Sum(s => s.amount).ToString();
+
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filePath));
+            Document doc = new Document(pdfDoc, PageSize.A4.Rotate());
+            PdfFont font = PdfFontFactory.CreateFont(StandardFonts.TIMES_ROMAN);
+
+            doc.SetMargins(10, 10, 10, 10);
+
+            doc.Add(new Paragraph("D' Home Hardware").SetMultipliedLeading(0.5f).SetFontSize(22).SetFont(font).SetTextAlignment(TextAlignment.CENTER));
+            doc.Add(new Paragraph("Koronadal City, South Cotabato").SetMultipliedLeading(0.5f).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER));
+            doc.Add(new Paragraph("Daily Expenses Report").SetMultipliedLeading(0.5f).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER));
+            doc.Add(new Paragraph(DateTime.Now.ToString("MM/dd/yyyy")).SetMultipliedLeading(0.5f).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER));
+
+            doc.Add(new Paragraph(".").SetFont(font).SetFontSize(14));
+
+            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 20, 20, 10, 10, 10 })).UseAllAvailableWidth();
+
+            foreach (var header in table_header)
+            {
+                Cell cell = new Cell();
+                cell.SetBackgroundColor(Color.ConvertRgbToCmyk(new DeviceRgb(192, 192, 192)));
+                cell.SetBorder(Border.NO_BORDER);
+                cell.SetMinHeight(24);
+                cell.SetVerticalAlignment(VerticalAlignment.MIDDLE);
+                cell.Add(new Paragraph(header).SetFontSize(12).SetFont(font).SetTextAlignment(TextAlignment.CENTER));
+                table.AddCell(cell);
+            }
+            foreach (var data in table_data)
+            {
+                Cell type = new Cell();
+                type.SetMinHeight(18);
+                type.SetBorder(Border.NO_BORDER);
+                type.SetVerticalAlignment(VerticalAlignment.MIDDLE);
+                type.Add(new Paragraph(data.type).SetFontSize(9).SetTextAlignment(TextAlignment.CENTER));
+                table.AddCell(type);
+
+                Cell receiver = new Cell();
+                receiver.SetMinHeight(18);
+                receiver.SetBorder(Border.NO_BORDER);
+                receiver.SetVerticalAlignment(VerticalAlignment.MIDDLE);
+                receiver.Add(new Paragraph(data.receiver).SetFontSize(9).SetTextAlignment(TextAlignment.CENTER));
+                table.AddCell(receiver);
+
+                Cell amount = new Cell();
+                amount.SetMinHeight(18);
+                amount.SetBorder(Border.NO_BORDER);
+                amount.SetVerticalAlignment(VerticalAlignment.MIDDLE);
+                amount.Add(new Paragraph(data.amount.ToString()).SetFontSize(9).SetTextAlignment(TextAlignment.CENTER));
+                table.AddCell(amount);
+
+                Cell date = new Cell();
+                date.SetMinHeight(18);
+                date.SetBorder(Border.NO_BORDER);
+                date.SetVerticalAlignment(VerticalAlignment.MIDDLE);
+                date.Add(new Paragraph(data.expense_date.ToString("MM/dd/yyyy")).SetFontSize(9).SetTextAlignment(TextAlignment.CENTER));
+                table.AddCell(date);
+
+                Cell user = new Cell();
+                user.SetMinHeight(18);
+                user.SetBorder(Border.NO_BORDER);
+                user.SetVerticalAlignment(VerticalAlignment.MIDDLE);
+                user.Add(new Paragraph(data.user).SetFontSize(9).SetTextAlignment(TextAlignment.CENTER));
+                table.AddCell(user);
+
+            }
+
+            doc.Add(table);
+
+            doc.Add(new Paragraph($"Total Sales:  {total_expense}").SetFontSize(10));
+
+            doc.Close();
+
+            return "/reports/DailyExpensesReport.pdf";
         }
     }
 }

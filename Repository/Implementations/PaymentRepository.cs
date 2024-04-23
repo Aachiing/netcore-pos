@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Sales_Inventory.Models;
 using Sales_Inventory.Models.DTO;
 using Sales_Inventory.Repository.Interfaces;
@@ -8,19 +9,28 @@ namespace Sales_Inventory.Repository.Implementations
     public class PaymentRepository : IPaymentRepository
     {
         private readonly salesinventory_dbContext _context;
-        public PaymentRepository(salesinventory_dbContext context) { _context = context; }
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public PaymentRepository(salesinventory_dbContext context, IHttpContextAccessor contextAccessor)
+        {
+            _context = context;
+            _httpContextAccessor = contextAccessor; 
+        }
 
         public async Task PostCashPayment(OrderHeaderDTO dto)
         {
+            Session session = JsonConvert.DeserializeObject<Session>(_httpContextAccessor.HttpContext!.Session.GetString("UserSession")!)!;
+
             decimal _gross = dto.order_details.Sum(s => s.total_amount);
             decimal vat_rate = (decimal)1.12;
 
             TblOrderHeader order_header = new TblOrderHeader();
             order_header.OrderNo = dto.order_no;
             order_header.CustomerName = dto.customer_name;
+            order_header.DiscountRemarks = dto.remarks;
+            order_header.Discount = dto.discount;
             order_header.AmountPaid = dto.amount_paid;
-            order_header.Gross = _gross;
-            order_header.Net = _gross - ((_gross / vat_rate) * (decimal)0.12);
+            order_header.Gross = _gross - dto.discount;
+            order_header.Net = (_gross - dto.discount) - ((_gross / vat_rate) * (decimal)0.12);
             order_header.Vat = (_gross / vat_rate) * (decimal)0.12;
             order_header.TotalItems = dto.order_details.Sum(s => s.quantity);
             order_header.PaymentType = dto.payment_type;
@@ -29,6 +39,8 @@ namespace Sales_Inventory.Repository.Implementations
             order_header.CheckAmount = dto.check_amount;
             order_header.CheckDate = dto.payment_type == "CHECK" ? dto.check_date : null;
             order_header.TransactionDate = DateTime.Now;
+            order_header.CashierId = session.user_id;
+            order_header.Cashier = session.full_name;
 
             await _context.TblOrderHeaders.AddAsync(order_header);
             await _context.SaveChangesAsync();
@@ -51,7 +63,7 @@ namespace Sales_Inventory.Repository.Implementations
 
                     await _context.TblOrderDetails.AddAsync(order_details);
 
-                    TblProduct product = await _context.TblProducts.Where(w => w.Id == item.product_id).SingleOrDefaultAsync();
+                    TblProduct product = await _context.TblProducts.Where(w => w.Id == item.product_id).SingleOrDefaultAsync()!;
                     product.Quantity -= item.quantity;
                 }
 
@@ -60,6 +72,8 @@ namespace Sales_Inventory.Repository.Implementations
         }
         public async Task<ReceivableDTO> PostCreditPayment(OrderHeaderDTO dto)
         {
+            Session session = JsonConvert.DeserializeObject<Session>(_httpContextAccessor.HttpContext!.Session.GetString("UserSession")!)!;
+
             decimal _gross = dto.order_details.Sum(s => s.total_amount);
             decimal vat_rate = (decimal)1.12;
 
@@ -67,9 +81,12 @@ namespace Sales_Inventory.Repository.Implementations
             order_header.OrderNo = dto.order_no;
             order_header.CustomerName = dto.customer_name;
             order_header.AmountPaid = dto.amount_paid;
-            order_header.Balance = (_gross - dto.amount_paid);
-            order_header.Gross = _gross;
-            order_header.Net = _gross - ((_gross / vat_rate) * (decimal)0.12);
+            order_header.Balance = ((_gross - dto.discount) - dto.amount_paid);
+            order_header.DiscountRemarks = dto.remarks;
+            order_header.Discount = dto.discount;
+            order_header.AmountPaid = dto.amount_paid;
+            order_header.Gross = _gross - dto.discount;
+            order_header.Net = (_gross - dto.discount) - ((_gross / vat_rate) * (decimal)0.12);
             order_header.Vat = (_gross / vat_rate) * (decimal)0.12;
             order_header.TotalItems = dto.order_details.Sum(s => s.quantity);
             order_header.IsPaid = false;
@@ -79,6 +96,8 @@ namespace Sales_Inventory.Repository.Implementations
             order_header.CheckAmount = dto.check_amount;
             order_header.CheckDate = dto.payment_type == "CHECK" ? dto.check_date : null;
             order_header.TransactionDate = DateTime.Now;
+            order_header.CashierId = session.user_id;
+            order_header.Cashier = session.full_name;
 
             await _context.TblCreditHeaders.AddAsync(order_header);
             await _context.SaveChangesAsync();

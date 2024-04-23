@@ -13,6 +13,8 @@
         public string transaction_type { get; set; }
         public int pos_id { get; set; }
         public decimal amount_paid { get; set; }
+        public decimal discount { get; set; }
+        public string remarks { get; set; }
         public decimal balance { get; set; }
         public decimal gross { get; set; }
         public decimal net { get; set; }

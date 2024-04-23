@@ -6,5 +6,6 @@ namespace Sales_Inventory.Repository.Interfaces
     {
         Task<string> DailyCashSalesReport(DateTime dateFrom, DateTime dateTo);
         Task<string> DailyCreditSalesReport(DateTime dateFrom, DateTime dateTo);
+        Task<string> DailyExpensesReport(DateTime dateFrom, DateTime dateTo);
     }
 }

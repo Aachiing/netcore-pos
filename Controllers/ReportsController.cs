@@ -33,6 +33,12 @@ namespace Sales_Inventory.Controllers
             return View();
         }
 
+        [HttpGet("daily-expenses-view")]
+        public IActionResult DailyExpensesView()
+        {
+            return View();
+        }
+
         [HttpGet("daily-sales/{dateFrom}/{dateTo}")]
         public async Task<IActionResult> GetDailySalesReport(DateTime dateFrom, DateTime dateTo)
         {
@@ -58,6 +64,23 @@ namespace Sales_Inventory.Controllers
             try
             {
                 filePath = await _reportrepository.DailyCreditSalesReport(dateFrom, dateTo);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { status = 500, response = ex.Message });
+            }
+
+            return Json(new { status = 500, response = filePath });
+        }
+
+        [HttpGet("daily-expenses/{dateFrom}/{dateTo}")]
+        public async Task<IActionResult> GetDailyExpensesReport(DateTime dateFrom, DateTime dateTo)
+        {
+            string filePath = string.Empty;
+
+            try
+            {
+                filePath = await _reportrepository.DailyExpensesReport(dateFrom, dateTo);
             }
             catch (Exception ex)
             {
