@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop.Infrastructure;
+using Newtonsoft.Json;
 using Sales_Inventory.Models;
 using Sales_Inventory.Models.DTO;
 using Sales_Inventory.Repository.Interfaces;
@@ -10,8 +11,13 @@ namespace Sales_Inventory.Repository.Implementations
     public class ProductRepository : IProductRepository
     {
         private readonly salesinventory_dbContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public ProductRepository(salesinventory_dbContext context) { _context = context; }
+        public ProductRepository(salesinventory_dbContext context, IHttpContextAccessor httpContextAccessor)
+        {
+            _context = context;
+            _httpContextAccessor = httpContextAccessor;
+        }
         public async Task Create(ProductDTO dto)
         {
             var obj = new TblProduct();
@@ -106,13 +112,32 @@ namespace Sales_Inventory.Repository.Implementations
 
             if (product != null)
             {
+                Session session = JsonConvert.DeserializeObject<Session>(_httpContextAccessor.HttpContext!.Session.GetString("UserSession")!)!;
+
+                TblProductHistory product_history = new TblProductHistory();
+                product_history.Name = dto.product_name;
+                product_history.Code = dto.product_code;
+                product_history.Barcode = dto.barcode;
+                product_history.Brand = dto.brand;
+                product_history.Price = dto.price;
+                product_history.Unit = dto.unit;
+                product_history.OldQuantity = product.Quantity;
+                product_history.AddedQuantity = dto.additional_quantity;
+                product_history.NewQuantity = product.Quantity + dto.additional_quantity;
+                product_history.IsDiscounted = dto.is_discounted;
+                product_history.DiscountRate = dto.discount_rate;
+                product_history.DateAdded = DateTime.Now;
+                product_history.AddedBy = session.user_id;
+
+                await _context.TblProductHistories.AddAsync(product_history);
+
                 product.Name = dto.product_name;
                 product.Code = dto.product_code;
                 product.Barcode = dto.barcode;
                 product.Brand = dto.brand;
                 product.Price = dto.price;
                 product.Unit = dto.unit;
-                product.Quantity = dto.quantity;
+                product.Quantity += dto.additional_quantity;
                 product.IsDiscounted = dto.is_discounted;
                 product.DiscountRate = dto.discount_rate;
 

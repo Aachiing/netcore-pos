@@ -136,7 +136,7 @@ namespace Sales_Inventory.Repository.Implementations
 
             doc.Add(table);
 
-            doc.Add(new Paragraph($"Total Expenses:  {total_sales}").SetFontSize(10));
+            doc.Add(new Paragraph($"Total Cash Sales:  {total_sales}").SetFontSize(10));
 
             doc.Close();
 
@@ -237,13 +237,12 @@ namespace Sales_Inventory.Repository.Implementations
             }
 
             doc.Add(table);
-            doc.Add(new Paragraph($"Total Sales:  {total_sales}").SetFontSize(10));
+            doc.Add(new Paragraph($"Total Credit Sales:  {total_sales}").SetFontSize(10));
 
             doc.Close();
 
             return "/reports/DailyCreditSalesReport.pdf";
         }
-
         public async Task<string> DailyExpensesReport(DateTime dateFrom, DateTime dateTo)
         {
 

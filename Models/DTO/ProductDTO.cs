@@ -20,6 +20,9 @@ namespace Sales_Inventory.Models.DTO
 
         [Range(0, int.MaxValue)]
         public int quantity { get; set; }
+
+        [Range(0, int.MaxValue)]
+        public int additional_quantity { get; set; }
         public string unit { get; set; }
 
         [Range(0, int.MaxValue)]

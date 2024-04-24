@@ -41,6 +41,7 @@
             quantity: $("#frmUpdateProduct #quantity").val(),
             unit: $("#frmUpdateProduct #unit").val(),
             price: $("#frmUpdateProduct #price").val(),
+            additional_quantity: $("#additional-quantity").val()
         }
 
         $.ajax({
