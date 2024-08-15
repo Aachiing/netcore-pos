@@ -14,10 +14,12 @@
     <link href="~/lib/font-awesome/css/all.css" rel="stylesheet" />
     <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
     <link href="~/lib/jquery/dist/jquery-ui-1.13.2.css" rel="stylesheet" />
+    <link href="~/lib/smart-wizard/css/smart_wizard_all.css" rel="stylesheet" />
+    <link href="~/lib/smart-wizard/css/smart_wizard_all.min.css" rel="stylesheet" />
 </head>
 <body>
     @{
-        var current_session = JsonConvert.DeserializeObject<Session>(HttpContextAccessor.HttpContext.Session.GetString("UserSession")!);
+        var current_session = JsonConvert.DeserializeObject<Session>(HttpContextAccessor.HttpContext!.Session.GetString("UserSession")!);
     }
     <sidebar id="sidebar">
         <div class="sidenav-header">
@@ -27,7 +29,7 @@
 
         <div class="sidenav-menu">
             <ul class="navbar-nav">
-                @if (current_session.user_type == "admin")
+                @if (current_session!.user_type == "admin")
                 {
                     <li class="nav-item" id="liDashboard">
                         <a class="nav-link text-white" href="../dashboard/index">
@@ -53,6 +55,12 @@
                             <span class="nav-link-text">&nbsp;Expenses</span>
                         </a>
                     </li>
+                  @*   <li class="nav-item" id="liReturns">
+                        <a class="nav-link text-white" href="../returns/list">
+                            <i class="fa-solid fa-rotate-left" style="height:20px;width:30px"></i>
+                            <span class="nav-link-text">&nbsp;Returns</span>
+                        </a>
+                    </li> *@
                     <li class="nav-item" id="liCustomers">
                         <a class="nav-link text-white" href="../customers/list">
                             <i class="fa-solid fa-users" style="height:20px;width:30px"></i>
@@ -84,6 +92,11 @@
                             <li class="nav-item" id="liDailyExpensesReports">
                                 <a class="nav-link text-white" href="../reports/daily-expenses-view">
                                     <span class="nav-link-text" style="font-size:14px">&nbsp;&nbsp;&nbsp;3. Daily Expenses</span>
+                                </a>
+                            </li>
+                            <li class="nav-item" id="liInventoryyHistoryReports">
+                                <a class="nav-link text-white" href="../reports/inventory-history-view">
+                                    <span class="nav-link-text" style="font-size:14px">&nbsp;&nbsp;&nbsp;4. Inventory History</span>
                                 </a>
                             </li>
                         </ul>
@@ -122,6 +135,12 @@
                             <span class="nav-link-text">&nbsp;Expenses</span>
                         </a>
                     </li>
+                    @* <li class="nav-item" id="liReturns">
+                        <a class="nav-link text-white" href="../returns/list">
+                            <i class="fa-solid fa-rotate-left" style="height:20px;width:30px"></i>
+                            <span class="nav-link-text">&nbsp;Returns</span>
+                        </a>
+                    </li> *@
                     <li class="nav-item" id="liCustomers">
                         <a class="nav-link text-white" href="../customers/list">
                             <i class="fa-solid fa-users" style="height:20px;width:30px"></i>
@@ -147,6 +166,11 @@
                             <li class="nav-item" id="liDailyExpensesReports">
                                 <a class="nav-link text-white" href="../reports/daily-expenses-view">
                                     <span class="nav-link-text" style="font-size:14px">&nbsp;&nbsp;&nbsp;3. Daily Expenses</span>
+                                </a>
+                            </li>
+                            <li class="nav-item" id="liInventoryyHistoryReports">
+                                <a class="nav-link text-white" href="../reports/daily-expenses-view">
+                                    <span class="nav-link-text" style="font-size:14px">&nbsp;&nbsp;&nbsp;4. Inventory History</span>
                                 </a>
                             </li>
                         </ul>
@@ -180,12 +204,14 @@
     <script src="~/lib/font-awesome/js/all.js"></script>
     <script src="~/lib/font-awesome/js/all.min.js"></script>
     <script src="~/lib/jquery/dist/jquery-ui-1.13.2.js"></script>
+    <script src="~/lib/smart-wizard/js/jquery.smartwizard.js"></script>
+    <script src="~/lib/smart-wizard/js/jquery.smartwizard.min.js"></script>
     <script>
         $(document).ready(function () {
             $("#sidebar-toggler").click(function () {
                 $("#sidebar, #main-content, #main-content-body,sidebar-items").toggleClass('sibebar-collapse');
             });
-            $(".nav-item").on("click", function () {
+            $(".sidenav-menu .nav-item").on("click", function () {
                 var activeNav = $(this).attr("id");
                 ActiveMenu(activeNav);
             });

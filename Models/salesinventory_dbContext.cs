@@ -194,6 +194,8 @@ namespace Sales_Inventory.Models
                     .HasMaxLength(20)
                     .IsUnicode(false);
 
+                entity.Property(e => e.ReturnedDate).HasColumnType("datetime");
+
                 entity.Property(e => e.TotalAmount).HasColumnType("decimal(18, 2)");
 
                 entity.Property(e => e.Unit)
@@ -238,6 +240,8 @@ namespace Sales_Inventory.Models
                     .IsUnicode(false)
                     .HasColumnName("CustomerTIN");
 
+                entity.Property(e => e.DateReturned).HasColumnType("datetime");
+
                 entity.Property(e => e.Discount).HasColumnType("decimal(18, 2)");
 
                 entity.Property(e => e.DiscountRemarks)
@@ -259,6 +263,8 @@ namespace Sales_Inventory.Models
                 entity.Property(e => e.ReferenceNo)
                     .HasMaxLength(150)
                     .IsUnicode(false);
+
+                entity.Property(e => e.ReturnedAmount).HasColumnType("decimal(18, 2)");
 
                 entity.Property(e => e.TransactionDate).HasColumnType("datetime");
 

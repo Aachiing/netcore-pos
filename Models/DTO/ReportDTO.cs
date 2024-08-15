@@ -23,4 +23,15 @@
         public string user { get; set; }
         public DateTime expense_date { get; set; }
     }
+    public class InventoryHistoryReportDTO
+    {
+        public string product_name { get; set; }
+        public string product_code { get; set; }
+        public string barcode { get; set; }
+        public int old_qty { get; set; }
+        public int added_qty { get; set; }
+        public int new_qty { get; set; }
+        public DateTime date_added { get; set; }
+        public string added_by { get; set; }
+    }
 }

@@ -16,5 +16,9 @@ namespace Sales_Inventory.Models
         public decimal UnitPrice { get; set; }
         public decimal? Discount { get; set; }
         public decimal? DiscountRate { get; set; }
+        public bool? HasReturn { get; set; }
+        public int? ReturnedQty { get; set; }
+        public DateTime? ReturnedDate { get; set; }
+        public int? ReturnedBy { get; set; }
     }
 }

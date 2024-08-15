@@ -67,6 +67,9 @@ th {
     font-size: 13px !important;
     text-align: center;
 }
+td {
+    text-align: center;
+}
 
 .jumbotron-fluid {
     background-color: #f3f3f3;
@@ -141,4 +144,21 @@ th {
 
 canvas {
     height: 690px !important;
+}
+
+#nav-returns a.nav-link {
+    color: #344767;
+    border-color: #cacfd9;
+}
+
+    #nav-returns a.nav-link.active {
+        background-color: #6b717c;
+        color: white;
+    }
+
+#nav-returns-content {
+    border-bottom: 1px solid #cacfd9;
+    border-left: 1px solid #cacfd9;
+    border-right: 1px solid #cacfd9;
+    border-radius: 5px;
 }

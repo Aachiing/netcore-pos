@@ -18,6 +18,7 @@ builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<ICustomerRepository, CustomerRepository>();
 builder.Services.AddTransient<IExpensesRepository, ExpensesRepository>();
 builder.Services.AddTransient<IReceiptsRepository, ReceiptsRepository>();
+builder.Services.AddTransient<IReturnRepository, ReturnRepository>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 //Session Config

@@ -48,5 +48,16 @@ namespace Sales_Inventory.DAL
 
             return dtRead.ToList<DailyExpensesReportDTO>();
         }
+
+        public List<InventoryHistoryReportDTO> InventoryHistoryReport(DateTime dateFrom, DateTime dateTo)
+        {
+            SqlParameterCollection _params = new SqlCommand().Parameters;
+            _params.AddWithValue("@dateFrom", dateFrom);
+            _params.AddWithValue("@dateTo", dateTo);
+
+            DataTable dtRead = _adoHelper.ExecuteRead(@"[dbo].[sp_InventoryHistory]", _params);
+
+            return dtRead.ToList<InventoryHistoryReportDTO>();
+        }
     }
 }

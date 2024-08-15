@@ -27,5 +27,8 @@ namespace Sales_Inventory.Models
         public string? CheckNo { get; set; }
         public decimal? CheckAmount { get; set; }
         public DateTime? CheckDate { get; set; }
+        public bool? HasReturn { get; set; }
+        public decimal? ReturnedAmount { get; set; }
+        public DateTime? DateReturned { get; set; }
     }
 }

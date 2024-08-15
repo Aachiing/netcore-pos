@@ -326,5 +326,104 @@ namespace Sales_Inventory.Repository.Implementations
 
             return "/reports/DailyExpensesReport.pdf";
         }
+
+        public async Task<string> InventoryHistoryReport(DateTime dateFrom, DateTime dateTo)
+        {
+            string webRootPath = _webHostEnvironment.WebRootPath;
+            string path = System.IO.Path.Combine(webRootPath, "reports");
+            string filePath = $"{path}/InventoryHistory.pdf";
+
+            string[] table_header = { "Name", "Code", "Barcode", "Old Qty", "Added Qty", "New Qty", "Date Added", "Added By" };
+            var table_data = _reportDAL.InventoryHistoryReport(dateFrom, dateTo);
+
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filePath));
+            Document doc = new Document(pdfDoc, PageSize.A4.Rotate());
+            PdfFont font = PdfFontFactory.CreateFont(StandardFonts.TIMES_ROMAN);
+
+            doc.SetMargins(10, 10, 10, 10);
+
+            doc.Add(new Paragraph("D' Home Hardware").SetMultipliedLeading(0.5f).SetFontSize(22).SetFont(font).SetTextAlignment(TextAlignment.CENTER));
+            doc.Add(new Paragraph("Koronadal City, South Cotabato").SetMultipliedLeading(0.5f).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER));
+            doc.Add(new Paragraph("Daily Expenses Report").SetMultipliedLeading(0.5f).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER));
+            doc.Add(new Paragraph(DateTime.Now.ToString("MM/dd/yyyy")).SetMultipliedLeading(0.5f).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER));
+
+            doc.Add(new Paragraph(".").SetFont(font).SetFontSize(14));
+
+            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 10, 10, 10, 10, 10, 10, 10,10 })).UseAllAvailableWidth();
+
+            foreach (var header in table_header)
+            {
+                Cell cell = new Cell();
+                cell.SetBackgroundColor(Color.ConvertRgbToCmyk(new DeviceRgb(192, 192, 192)));
+                cell.SetBorder(Border.NO_BORDER);
+                cell.SetMinHeight(24);
+                cell.SetVerticalAlignment(VerticalAlignment.MIDDLE);
+                cell.Add(new Paragraph(header).SetFontSize(12).SetFont(font).SetTextAlignment(TextAlignment.CENTER));
+                table.AddCell(cell);
+            }
+            foreach (var data in table_data)
+            {
+                Cell product_name = new Cell();
+                product_name.SetMinHeight(18);
+                product_name.SetBorder(Border.NO_BORDER);
+                product_name.SetVerticalAlignment(VerticalAlignment.MIDDLE);
+                product_name.Add(new Paragraph(data.product_name).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER));
+                table.AddCell(product_name);
+
+                Cell product_code = new Cell();
+                product_code.SetMinHeight(18);
+                product_code.SetBorder(Border.NO_BORDER);
+                product_code.SetVerticalAlignment(VerticalAlignment.MIDDLE);
+                product_code.Add(new Paragraph(data.product_code).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER));
+                table.AddCell(product_code);
+
+                Cell barcode = new Cell();
+                barcode.SetMinHeight(18);
+                barcode.SetBorder(Border.NO_BORDER);
+                barcode.SetVerticalAlignment(VerticalAlignment.MIDDLE);
+                barcode.Add(new Paragraph(data.barcode).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER));
+                table.AddCell(barcode);
+
+                Cell old_qty = new Cell();
+                old_qty.SetMinHeight(18);
+                old_qty.SetBorder(Border.NO_BORDER);
+                old_qty.SetVerticalAlignment(VerticalAlignment.MIDDLE);
+                old_qty.Add(new Paragraph(data.old_qty.ToString()).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER));
+                table.AddCell(old_qty);
+
+                Cell added_qty = new Cell();
+                added_qty.SetMinHeight(18);
+                added_qty.SetBorder(Border.NO_BORDER);
+                added_qty.SetVerticalAlignment(VerticalAlignment.MIDDLE);
+                added_qty.Add(new Paragraph(data.added_qty.ToString()).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER));
+                table.AddCell(added_qty);
+
+                Cell new_qty = new Cell();
+                new_qty.SetMinHeight(18);
+                new_qty.SetBorder(Border.NO_BORDER);
+                new_qty.SetVerticalAlignment(VerticalAlignment.MIDDLE);
+                new_qty.Add(new Paragraph(data.new_qty.ToString()).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER));
+                table.AddCell(new_qty);
+
+                Cell date_added = new Cell();
+                date_added.SetMinHeight(18);
+                date_added.SetBorder(Border.NO_BORDER);
+                date_added.SetVerticalAlignment(VerticalAlignment.MIDDLE);
+                date_added.Add(new Paragraph(data.date_added.ToString("MM/dd/yyyy")).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER));
+                table.AddCell(date_added);
+
+                Cell added_by = new Cell();
+                added_by.SetMinHeight(18);
+                added_by.SetBorder(Border.NO_BORDER);
+                added_by.SetVerticalAlignment(VerticalAlignment.MIDDLE);
+                added_by.Add(new Paragraph(data.added_by).SetFontSize(10).SetTextAlignment(TextAlignment.CENTER));
+                table.AddCell(added_by);
+            }
+
+            doc.Add(table);
+            doc.Close();
+
+            return "/reports/InventoryHistory.pdf";
+        }
     }
 }

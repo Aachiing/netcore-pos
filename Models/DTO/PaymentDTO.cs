@@ -43,6 +43,10 @@
         public decimal unit_price { get; set; }
         public decimal discount { get; set; }
         public decimal discount_rate { get; set; }
+        public string customer_name { get; set; }
+        public string returned_date { get; set; }
+        public DateTime date_return { get; set; }
+        public int return_qty { get; set; }
     }
 }
 

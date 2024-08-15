@@ -1,0 +1,119 @@
+﻿@using Sales_Inventory.Models.DTO;
+@model PaginationDTO<ExpensesDTO>;
+@{
+    ViewData["Title"] = "Returns";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card text-dark bg-light p-4">
+            <div class="card-body">
+                <div class="row pb-2">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs" id="nav-returns">
+                        <li class="nav-item" id="navlink-cash">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#nav-returns-content">Cash</a>
+                        </li>
+                        <li class="nav-item" id="navlink-credit">
+                            <a class="nav-link" data-bs-toggle="tab" href="#nav-returns-content">Credit</a>
+                        </li>
+                    </ul>
+                    <!-- Tab panes -->
+                    <div class="tab-content pt-2" id="nav-returns-content">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="mdlItemQty" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Item Quantity</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form>
+                <div class="modal-body">
+                    <div class="row pb-3">
+                        <input type="hidden" class="form-control" id="txtOrderId" />
+                        <div class="col-md-12 mb-2">
+                            <input type="number" class="form-control" id="txtQty" />
+                        </div>
+                        <div class="col-md-12 mb-2">
+                            <input type="button" class="btn btn-success col-12" value="Accept" />
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(function () {
+            ActiveMenu("liReturns");
+            $("#nav-returns-content").load("partial-cash-transactions");
+        })
+
+        function ReturnItem(barcode) {
+
+            var row = $("#tblCashReturn").find("tr." + barcode);
+
+            if (!row.hasClass("active")) {
+                row.parent().find("tr").removeClass("active");
+                row.addClass("active");
+            }
+            else {
+                row.removeClass("active");
+            }
+
+            $("#mdlItemQty").modal("show");
+        }
+
+        $("#mdlItemQty .btn-success").on('click', function () {
+            AddReturnQuantity();
+        });
+
+        $("#mdlItemQty").enterKey(function () {
+            $("#mdlItemQty .btn-success").trigger("click");
+        })
+
+        function ProcessReturn() {
+            alert("return");
+        }
+
+        function AddReturnQuantity() {
+
+            var activeRow = $("#tblCashReturn").find("tr.active");
+
+            var original_qty = parseInt(activeRow.find("td:eq(2)").text());
+            var price = parseFloat(activeRow.find("td:eq(3)").text());
+            var return_qty = parseFloat($('#txtQty').val());
+
+
+            if (return_qty > original_qty) {
+                alert("Cannot return more than the original quantity!");
+                $('#txtQty').val("");
+                return false;
+            }
+
+            if (!isNaN(return_qty) && return_qty > 0) {
+                activeRow.find("td:eq(4)").text(return_qty);
+                activeRow.find("td:eq(5)").text((return_qty * price).toFixed(2));
+
+                $("#mdlItemQty").modal("hide");
+                $('#txtQty').val("");
+            }
+            else {
+                alert("Please enter quantity");
+            }
+        }
+
+    </script>
+}
